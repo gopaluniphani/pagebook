@@ -2,7 +2,7 @@ package com.example.stories.controllers;
 
 import com.example.stories.models.Response;
 import com.example.stories.models.StoryFeed;
-import com.example.stories.models.StoryFeedDTO;
+import com.example.stories.dto.StoryFeedDTO;
 import com.example.stories.services.StoryFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

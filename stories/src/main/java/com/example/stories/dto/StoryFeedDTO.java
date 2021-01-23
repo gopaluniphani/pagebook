@@ -1,4 +1,4 @@
-package com.example.stories.models;
+package com.example.stories.dto;
 
 public class StoryFeedDTO {
     private String storyId;
