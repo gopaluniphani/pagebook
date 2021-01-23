@@ -12,6 +12,7 @@
 
   <modules>
     <module>business</module>
+	<module>stories</module>
   </modules>
 
 </project>
