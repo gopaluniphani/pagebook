@@ -41,4 +41,8 @@ public class Moderators {
     public void setModerators(List<String> moderators) {
         this.moderators = moderators;
     }
+
+    public void addModerator(String moderatorId) {
+        this.moderators.add(moderatorId);
+    }
 }

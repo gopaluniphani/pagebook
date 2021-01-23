@@ -3,6 +3,7 @@ package com.example.business.controller;
 import com.example.business.models.*;
 import com.example.business.services.BusinessService;
 import com.example.business.services.ApprovedPostsService;
+import com.example.business.services.ModeratorsService;
 import com.example.business.services.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,18 @@ public class BusinessController {
     ApprovedPostsService approvedPostsService;
 
     @Autowired
+    ModeratorsService moderatorsService;
+
+    @Autowired
     PostsService postsService;
 
-    @PostMapping(value = "/")
-    public Response createBusiness(@RequestBody Business business) {
+    @PostMapping(value = "/{userId}")
+    public Response createBusiness(@RequestBody Business business, @PathVariable("userId") String userId) {
         Business newBusiness = businessService.save(business);
+        Moderators moderators = new Moderators();
+        moderators.setBusinessId(newBusiness.getId());
+        moderators.addModerator(userId);
+        moderatorsService.save(moderators);
         return new Response(true, "", newBusiness);
     }
 
