@@ -10,8 +10,8 @@
 
   <name>pagebook</name>
 
-  <module>
-        
+  <modules>
+    <module>profile</module>      
   </modules>
 
 </project>
