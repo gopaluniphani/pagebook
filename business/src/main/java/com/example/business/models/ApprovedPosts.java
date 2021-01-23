@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document
-public class Posts {
+public class ApprovedPosts {
+
     @Id
     private String id;
     private String businessId;
     private List<String> posts;
 
-    public Posts() {
+    public ApprovedPosts() {
         this.posts = new ArrayList<>();
     }
 

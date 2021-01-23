@@ -1,9 +1,10 @@
 package com.example.business.controller;
 
 import com.example.business.models.Business;
-import com.example.business.models.Posts;
+import com.example.business.models.ApprovedPosts;
 import com.example.business.models.Response;
 import com.example.business.services.BusinessService;
+import com.example.business.services.ApprovedPostsService;
 import com.example.business.services.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class BusinessController {
 
     @Autowired
     BusinessService businessService;
+
+    @Autowired
+    ApprovedPostsService approvedPostsService;
 
     @Autowired
     PostsService postsService;
@@ -40,9 +44,9 @@ public class BusinessController {
         return  response;
     }
 
-    @GetMapping(value = "/posts/{id}")
+    @GetMapping(value = "/approvedposts/{id}")
     public Response getPostsByBusinessId(@PathVariable("id") String businessId) {
-        Posts posts = postsService.findByBusinessId(businessId);
-        return new Response(true, "", posts);
+        ApprovedPosts approvedPosts = approvedPostsService.findByBusinessId(businessId);
+        return new Response(true, "", approvedPosts);
     }
 }

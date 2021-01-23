@@ -1,6 +1,13 @@
 spring:
   application:
     name: pagebook-business
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: business
+      repositories:
+        enabled: true
 
 eureka:
   client:
