@@ -1,12 +1,19 @@
 spring:
   application:
-    name: pagebook-business
+    name: pagebook-stories
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: stories
+      repositories:
+        enabled: true
 
 eureka:
   client:
     registerWithEureka: true
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://10.177.68.70:8761/eureka}
+      defaultZone: ${EUREKA_SERVER:http://10.177.68.9:8761/eureka}
 
 management:
   endpoints:
