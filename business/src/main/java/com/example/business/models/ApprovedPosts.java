@@ -41,4 +41,8 @@ public class ApprovedPosts {
     public void setPosts(List<String> posts) {
         this.posts = posts;
     }
+
+    public void addPost(String postId) {
+        posts.add(postId);
+    }
 }

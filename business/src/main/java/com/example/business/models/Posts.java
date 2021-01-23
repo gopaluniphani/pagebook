@@ -40,4 +40,12 @@ public class Posts {
     public void setPosts(List<String> posts) {
         this.posts = posts;
     }
+
+    public void addPosts(String postId) {
+        this.posts.add(postId);
+    }
+
+    public void removePost(String postId) {
+        this.posts.remove(postId);
+    }
 }

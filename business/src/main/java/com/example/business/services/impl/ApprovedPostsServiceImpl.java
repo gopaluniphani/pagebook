@@ -13,12 +13,17 @@ public class ApprovedPostsServiceImpl implements ApprovedPostsService {
     ApprovedPostsRepository approvedPostsRepository;
 
     @Override
+    public ApprovedPosts save(ApprovedPosts posts) {
+        return approvedPostsRepository.save(posts);
+    }
+
+    @Override
     public Optional<ApprovedPosts> findById(String id) {
         return approvedPostsRepository.findById(id);
     }
 
     @Override
-    public ApprovedPosts findByBusinessId(String businessId) {
+    public Optional<ApprovedPosts> findByBusinessId(String businessId) {
         return approvedPostsRepository.findByBusinessId(businessId);
     }
 }

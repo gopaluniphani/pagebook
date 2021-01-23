@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @Service
 public interface ApprovedPostsService {
+    ApprovedPosts save(ApprovedPosts posts);
     Optional<ApprovedPosts> findById(String id);
-    ApprovedPosts findByBusinessId(String businessId);
+    Optional<ApprovedPosts> findByBusinessId(String businessId);
 }

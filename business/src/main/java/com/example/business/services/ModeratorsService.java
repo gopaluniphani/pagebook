@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @Service
 public interface ModeratorsService {
+    Moderators save(Moderators moderators);
     Optional<Moderators> findById(String id);
-    Moderators findByBusinessId(String businessId);
+    Optional<Moderators> findByBusinessId(String businessId);
 }

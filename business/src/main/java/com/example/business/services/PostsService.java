@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @Service
 public interface PostsService {
+    Posts save(Posts posts);
     Optional<Posts> findById(String id);
-    Posts findByBusinessId(String businessId);
+    Optional<Posts> findByBusinessId(String businessId);
 }

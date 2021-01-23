@@ -13,12 +13,17 @@ public class PostServiceImpl implements PostsService {
     PostsRepository postsRepository;
 
     @Override
+    public Posts save(Posts posts) {
+        return postsRepository.save(posts);
+    }
+
+    @Override
     public Optional<Posts> findById(String id) {
         return postsRepository.findById(id);
     }
 
     @Override
-    public Posts findByBusinessId(String businessId) {
+    public Optional<Posts> findByBusinessId(String businessId) {
         return postsRepository.findByBusinessId(businessId);
     }
 }

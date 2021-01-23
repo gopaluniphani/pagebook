@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @Service
 public interface FollowersService {
+    Followers save(Followers followers);
     Optional<Followers> findById(String id);
-    Followers findByBusinessId(String businessId);
+    Optional<Followers> findByBusinessId(String businessId);
 }

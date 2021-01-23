@@ -15,12 +15,17 @@ public class FollowersServiceImpl implements FollowersService {
     FollowersRepository followersRepository;
 
     @Override
+    public Followers save(Followers followers) {
+        return followersRepository.save(followers);
+    }
+
+    @Override
     public Optional<Followers> findById(String id) {
         return followersRepository.findById(id);
     }
 
     @Override
-    public Followers findByBusinessId(String businessId) {
+    public Optional<Followers> findByBusinessId(String businessId) {
         return followersRepository.findByBusinessId(businessId);
     }
 }

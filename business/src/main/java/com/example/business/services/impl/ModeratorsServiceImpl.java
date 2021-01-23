@@ -15,12 +15,17 @@ public class ModeratorsServiceImpl implements ModeratorsService {
     ModeratorsRepository moderatorsRepository;
 
     @Override
+    public Moderators save(Moderators moderators) {
+        return moderatorsRepository.save(moderators);
+    }
+
+    @Override
     public Optional<Moderators> findById(String id) {
         return moderatorsRepository.findById(id);
     }
 
     @Override
-    public Moderators findByBusinessId(String businessId) {
+    public Optional<Moderators> findByBusinessId(String businessId) {
         return moderatorsRepository.findByBusinessId(businessId);
     }
 }
