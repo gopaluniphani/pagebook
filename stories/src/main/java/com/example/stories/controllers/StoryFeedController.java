@@ -1,12 +1,18 @@
 package com.example.stories.controllers;
 
-import com.example.stories.models.Response;
+import com.example.stories.dto.GetFriendsListDTO;
+import com.example.stories.models.Story;
 import com.example.stories.models.StoryFeed;
+import com.example.stories.dto.Response;
 import com.example.stories.dto.StoryFeedDTO;
 import com.example.stories.services.StoryFeedService;
+import com.example.stories.services.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,17 +22,43 @@ public class StoryFeedController {
     @Autowired
     StoryFeedService storyFeedService;
 
-    @PostMapping("/add/{userId}")
-    Response addStoryToFeed(@PathVariable("userId") String userId, @RequestBody StoryFeedDTO storyFeedDTO) {
-        Optional<StoryFeed> storyFeed = storyFeedService.findByUserId(userId);
-        StoryFeed newStoryFeed;
-        if(!storyFeed.isPresent()) {
-            newStoryFeed = new StoryFeed();
-            newStoryFeed.setUserId(userId);
-        } else {
-            newStoryFeed = storyFeed.get();
+    @Autowired
+    StoryService storyService;
+
+    @GetMapping("/user/{userId}")
+    Response getStoryFeedForUser(@PathVariable("userId") String userId) {
+        Optional<StoryFeed> feed = storyFeedService.findByUserId(userId);
+        if(!feed.isPresent()) {
+            return new Response(true, "", new ArrayList<Story>());
         }
-        newStoryFeed.addStory(storyFeedDTO.getStoryId());
-        return new Response(true, "", storyFeedService.save(newStoryFeed));
+        List<String> idsList = feed.get().getStories();
+        StoryFeedDTO response = new StoryFeedDTO();
+        for(String id : idsList) {
+            Optional<Story> story = storyService.findById(id);
+            if(story.isPresent())
+                response.addToStories(story.get());
+        }
+        return new Response(true, "", response);
     }
+//
+//    @KafkaListener(topics = "getFriendsList", groupId = "pagebook")
+//    public void consumeFriendsList(@RequestBody GetFriendsListDTO getFriendsListDTO) {
+//        List<String> friends = getFriendsListDTO.getFriendsList();
+//        for(String friend : friends) {
+//            addStoryToFeed(friend, getFriendsListDTO.getStoryId());
+//        }
+//    }
+//
+//    void addStoryToFeed(String userId, String storyId) {
+//        Optional<StoryFeed> storyFeed = storyFeedService.findByUserId(userId);
+//        StoryFeed newStoryFeed;
+//        if(!storyFeed.isPresent()) {
+//            newStoryFeed = new StoryFeed();
+//            newStoryFeed.setUserId(userId);
+//        } else {
+//            newStoryFeed = storyFeed.get();
+//        }
+//        newStoryFeed.addStory(storyId);
+//        storyFeedService.save(newStoryFeed);
+//    }
 }

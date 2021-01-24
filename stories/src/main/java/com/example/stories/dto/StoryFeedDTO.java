@@ -1,13 +1,18 @@
 package com.example.stories.dto;
 
-public class StoryFeedDTO {
-    private String storyId;
+import com.example.stories.models.Story;
 
-    public String getStoryId() {
-        return storyId;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StoryFeedDTO {
+    private List<Story> stories;
+
+    public StoryFeedDTO() {
+        this.stories = new ArrayList<>();
     }
 
-    public void setStoryId(String storyId) {
-        this.storyId = storyId;
+    public void addToStories(Story story) {
+        this.stories.add(story);
     }
 }

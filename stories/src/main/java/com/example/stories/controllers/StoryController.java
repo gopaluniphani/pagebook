@@ -1,10 +1,13 @@
 package com.example.stories.controllers;
 
-import com.example.stories.models.Response;
+import com.example.stories.dto.RequestFriendsListDTO;
+import com.example.stories.dto.Response;
 import com.example.stories.models.Story;
 import com.example.stories.services.StoryService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +20,27 @@ public class StoryController {
     @Autowired
     StoryService storyService;
 
-    @Autowired
-    KafkaTemplate<String, String> kafkaTemplate;
+//    @Autowired
+//    KafkaTemplate<String, RequestFriendsListDTO> requestFriendsList;
 
+    @Autowired
+    private RabbitTemplate userIdSender;
+
+    @Autowired
+    private RabbitTemplate deleteRequestSender;
 
     @PostMapping(value = "/")
     Response createNewStory(Story story) {
-        return new Response(true, "", storyService.save(story));
+        Story newStory = storyService.save(story);
+        RequestFriendsListDTO requestFriendsListDTO = new RequestFriendsListDTO();
+        requestFriendsListDTO.setUserId(newStory.getUserId());
+        requestFriendsListDTO.setStoryId(newStory.getId());
+
+        userIdSender.convertAndSend(requestFriendsListDTO);
+        deleteRequestSender.convertAndSend(requestFriendsListDTO);
+
+//        requestFriendsList.send("requestFriendsList", "requestFriendsKey", requestFriendsListDTO);
+        return new Response(true, "", newStory);
     }
 
     @GetMapping(value = "/{id}")

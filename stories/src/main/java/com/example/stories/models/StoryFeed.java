@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-//todo : Sr. Phani : This should be a DTO not a doument
+//todo : Sr. Phani : This should be a DTO not a document
 @Document
 public class StoryFeed {
 
