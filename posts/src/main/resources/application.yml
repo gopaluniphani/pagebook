@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+spring:
+  application:
+      name: pagebook-posts
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://10.177.2.21:8761/eureka}
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - mappings
+          - env
+          - health
+          - info
