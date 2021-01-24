@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: pagebook-profile
+  datasource:
+    url: jdbc:postgresql://localhost:5432/training
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://10.177.68.9:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - mappings
+          - env
+          - health
+          - info
