@@ -41,4 +41,8 @@ public class Followers {
     public void setFollowers(List<String> followers) {
         this.followers = followers;
     }
+
+    public void addFollower(String followerId) {
+        this.followers.add(followerId);
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.stories.config;
 
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,11 +16,16 @@ import java.util.Map;
 public class MQConfig {
     public static final String SEND_USER_ID_QUEUE = "sendUserId";
     public static final String RECEIVE_FRIENDS_LIST_QUEUE = "receiveFriendsList";
+    public static final String SEND_FRIENDS_LIST_QUEUE = "sendFriendsList";
     public static final String SEND_DELETE_REQUEST_QUEUE = "sendDeleteRequest";
     public static final String RECEIVE_DELETE_REQUEST_QUEUE = "receiveDeleteRequest";
+    public static final String RECEIVE_FRIENDS_LIST_TO_DELETE_QUEUE = "receiveFriendsListToDelete";
 
     @Autowired
     private ConnectionFactory cachingConnectionFactory;
+
+    @Autowired
+    private AmqpAdmin amqpAdmin;
 
     // Setting the annotation listeners to use the jackson2JsonMessageConverter
     @Bean
@@ -43,7 +48,7 @@ public class MQConfig {
         // The default exchange
         args.put("x-dead-letter-exchange", "");
         // Route to the incoming queue when the TTL occurs
-        args.put("x-dead-letter-routing-key", RECEIVE_FRIENDS_LIST_QUEUE);
+        args.put("x-dead-letter-routing-key", SEND_FRIENDS_LIST_QUEUE);
         // TTL 5 seconds
         args.put("x-message-ttl", 0);
         return new Queue(SEND_USER_ID_QUEUE, false, false, false, args);

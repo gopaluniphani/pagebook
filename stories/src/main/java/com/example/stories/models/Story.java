@@ -11,7 +11,6 @@ public class Story {
     private String userId;
     private String userName;
     private String userImageUrl;
-    //todo : Sr. Phani : make this as a list of images
     private String fileUrl;
 
     public String getId() {

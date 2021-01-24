@@ -32,7 +32,7 @@ public class MQListeners {
         }
     }
 
-    @RabbitListener(queues = MQConfig.RECEIVE_DELETE_REQUEST_QUEUE)
+    @RabbitListener(queues = MQConfig.RECEIVE_FRIENDS_LIST_TO_DELETE_QUEUE)
     public void deleteStoryInFeed(GetFriendsListDTO friendsListDTO) {
         List<String> friends = friendsListDTO.getFriendsList();
         for(String friend : friends) {

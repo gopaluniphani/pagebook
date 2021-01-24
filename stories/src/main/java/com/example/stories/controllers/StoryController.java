@@ -1,5 +1,6 @@
 package com.example.stories.controllers;
 
+import com.example.stories.dto.ImageDTO;
 import com.example.stories.dto.RequestFriendsListDTO;
 import com.example.stories.dto.Response;
 import com.example.stories.models.Story;
@@ -30,7 +31,7 @@ public class StoryController {
     private RabbitTemplate deleteRequestSender;
 
     @PostMapping(value = "/")
-    Response createNewStory(Story story) {
+    Response createNewStory(@RequestBody Story story) {
         Story newStory = storyService.save(story);
         RequestFriendsListDTO requestFriendsListDTO = new RequestFriendsListDTO();
         requestFriendsListDTO.setUserId(newStory.getUserId());
