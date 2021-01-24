@@ -1,4 +1,4 @@
-package com.example.stories.models;
+package com.example.business.models;
 
 public class Response {
     private boolean status;
@@ -6,7 +6,8 @@ public class Response {
     private Object body;
 
     public Response() {
-
+        this.errorMessage = "";
+        this.body = null;
     }
 
     public Response(boolean status, String errorMessage, Object body) {

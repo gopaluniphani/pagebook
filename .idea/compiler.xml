@@ -8,10 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="pagebook" />
         <module name="stories" />
+        <module name="business" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="business" target="11" />
+      <module name="business" target="1.8" />
       <module name="pagebook" target="1.5" />
       <module name="stories" target="1.8" />
     </bytecodeTargetLevel>
