@@ -14,4 +14,10 @@ public interface PostService {
     Post findById(String postId);
 
     String findUserIdByPostId(String postId);
+
+    List<Post> getUnapprovedPost(String businessId);
+
+    List<Post> getBusinessPost(String businessId);
+
+    String getProfileTypeByPostId(String postId);
 }

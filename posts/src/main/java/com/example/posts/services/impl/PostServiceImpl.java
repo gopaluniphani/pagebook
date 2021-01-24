@@ -1,5 +1,6 @@
 package com.example.posts.services.impl;
 
+import com.example.posts.Constant;
 import com.example.posts.entity.Post;
 import com.example.posts.model.Response;
 import com.example.posts.repositories.PostRepository;
@@ -19,6 +20,15 @@ public class PostServiceImpl implements PostService {
     public Response addPost(Post post) {
         Response response;
         try {
+            if(post.getProfileType() == Constant.PROFILE_TYPE_NORMAL)
+            {
+                post.setApproved(true);
+
+            }
+            else
+            {
+
+            }
             Post addedPost = postRepository.save(post);
             response = Response.builder()
                     .status(true)
@@ -55,4 +65,30 @@ public class PostServiceImpl implements PostService {
         return postRepository.findUserIdByPostId(postId);
     }
 
+    @Override
+    public List<Post> getUnapprovedPost(String businessId) {
+        return postRepository.getUnApprovedPost(businessId);
+    }
+
+    @Override
+    public List<Post> getBusinessPost(String businessId) {
+        return postRepository.getBusinessPost(businessId);
+    }
+
+    @Override
+    public String getProfileTypeByPostId(String postId) {
+        return postRepository.getProfileTypeByPostId(postId);
+    }
+
+    //todo :
+    List<String> getFriendsList(String userId)
+    {
+        return null;
+    }
+
+    //todo :
+    List<String> getFollowersList(String businessId)
+    {
+        return null;
+    }
 }

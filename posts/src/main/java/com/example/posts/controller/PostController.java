@@ -1,14 +1,14 @@
 package com.example.posts.controller;
 
+import com.example.posts.entity.Action;
+import com.example.posts.entity.Comment;
 import com.example.posts.entity.Post;
-import com.example.posts.model.PostDTO;
+import com.example.posts.entity.PostsFeed;
 import com.example.posts.model.Response;
-import com.example.posts.services.ActionService;
-import com.example.posts.services.CommentService;
-import com.example.posts.services.PostService;
-import com.example.posts.services.PBUserService;
+import com.example.posts.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/pagebook/api/post")
@@ -22,38 +22,94 @@ public class PostController {
     PostService postService;
     @Autowired
     PBUserService pbUserService;
+    @Autowired
+    PostsFeedService postsFeedService;
 
-    @PostMapping("/")
+    @PostMapping
     Response addPost(@RequestBody Post post)
     {
         return postService.addPost(post);
     }
 
-    //We can also add pagination here.
+    //todo: We can also add pagination here.
     @GetMapping("/getUsersPost/{userId}")
     Response getUsersPost(@PathVariable("userId") String userId)
     {
         return postService.findPostByUserId(userId);
     }
 
-
-
-    @GetMapping("/getFeedPosts/{}")
-    PostDTO getFeedPosts(@PathVariable("postId") String postId)
+    //This method is created to test other API.
+    @PostMapping("/addToFeedsOfUser")
+    void addToFeedsOfUser(@RequestBody PostsFeed postFeed)
     {
-        String userId = postService.findUserIdByPostId(postId);
-        PostDTO postDTO = PostDTO.builder()
-                .post( postService.findById(postId))
-                .userImgURL( pbUserService.findUserImgByUserId(userId))
-                .userName( pbUserService.findUserNameByUserId(userId))
-                .totalComments( commentService.totalCommentsByPostId(postId))
-                .totalLikes( actionService.totalLikesByPostId(postId))
-                .totalDislikes( actionService.totalDislikesByPostId(postId))
-                .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
-                .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
-                .performedAction( actionService.performedActionByUserForPost(postId, userId))
+        postsFeedService.addToFeedsOfUser(postFeed);
+    }
+
+
+    @GetMapping("/getFeedPosts/{userId}/{page}")
+    Response gePostsFeed(@PathVariable("userId") String userId, @PathVariable("page") int page)
+    {
+        Response response = Response.builder()
+                .status(true)
+                .body(postsFeedService.getPostsFeedByPage(userId, page))
                 .build();
-        return postDTO;
+        return  response;
+    }
+
+    @GetMapping("/getUnapprovedPost/{businessId}")
+    Response getUnapprovedPost(@PathVariable("businessId")String businessId)
+    {
+        Response response = Response.builder()
+                .body(postService.getUnapprovedPost(businessId))
+                .status(true)
+                .build();
+        return response;
+    }
+
+    /*@GetMapping("/getApprovedPost/{businessId}")
+    Response getApprovedPost(@PathVariable("businessId")String businessId)
+    {
+        Response response = Response.builder()
+                .body(postService.getUnapprovedPost(businessId))
+                .status(true)
+                .build();
+        return response;
+    }*/
+
+    @GetMapping("/getBusinessPost/{businessId}")
+    Response getBusinessPost(@PathVariable("businessId")String businessId)
+    {
+        Response response = Response.builder()
+                .body(postService.getBusinessPost(businessId))
+                .status(true)
+                .build();
+        return response;
+    }
+
+    @PostMapping("/addComment")
+    Response addComments(@RequestBody Comment comment)
+    {
+        Response response = Response.builder()
+                .body( commentService.addComment( comment))
+                .status(true)
+                .build();
+        return  response;
+    }
+
+    @PostMapping("/addAction")
+    Response addAction(@RequestBody Action action)
+    {
+        Response response;
+        String actionId = actionService.findActionIdByPostIdAndUserId(action.getUserId(), action.getPostId());
+        if(actionId != null)
+        {
+            action.setActionId( actionId);
+        }
+        response = Response.builder()
+                .body(actionService.save(action))
+                .status(true)
+                .build();
+        return  response;
     }
 
 }

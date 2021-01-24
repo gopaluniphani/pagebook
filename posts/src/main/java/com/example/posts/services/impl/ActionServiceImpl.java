@@ -1,5 +1,6 @@
 package com.example.posts.services.impl;
 
+import com.example.posts.entity.Action;
 import com.example.posts.repositories.ActionRepository;
 import com.example.posts.services.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,15 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public int performedActionByUserForPost(String postId, String userId) {
         return actionRepository.performedActionByUserForPost(postId, userId);
+    }
+
+    @Override
+    public String findActionIdByPostIdAndUserId(String userId, String postId) {
+        return actionRepository.findActionIdByPostIdAndUserId(userId, postId);
+    }
+
+    @Override
+    public Action save(Action action) {
+        return actionRepository.save(action);
     }
 }

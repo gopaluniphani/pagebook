@@ -1,13 +1,13 @@
 package com.example.posts.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
  /*Actions
@@ -22,6 +22,9 @@ import javax.persistence.Id;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Getter
+@Setter
+@ToString
 public class Action {
 
     @Id
@@ -40,64 +43,4 @@ public class Action {
     private String actionTime;
 
     private boolean isActive;
-
-    @Override
-    public String toString() {
-        return "Action{" +
-                "actionId='" + actionId + '\'' +
-                ", postId='" + postId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", actionType='" + actionType + '\'' +
-                ", actionTime='" + actionTime + '\'' +
-                ", isActive=" + isActive +
-                '}';
-    }
-
-    public String getActionId() {
-        return actionId;
-    }
-
-    public void setActionId(String actionId) {
-        this.actionId = actionId;
-    }
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public int getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(int actionType) {
-        this.actionType = actionType;
-    }
-
-    public String getActionTime() {
-        return actionTime;
-    }
-
-    public void setActionTime(String actionTime) {
-        this.actionTime = actionTime;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 }

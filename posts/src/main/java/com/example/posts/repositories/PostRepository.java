@@ -16,6 +16,19 @@ public interface PostRepository extends CrudRepository<Post, String> {
     @Query("select ps from Post ps where ps.userId=:i")
     List<Post> findPostByUserId(@Param("i") String userId);
 
+    @Transactional(readOnly = true)
     @Query("select ps.userId from Post ps where ps.postId=:i")
     String findUserIdByPostId(@Param("i") String postId);
+
+    @Transactional(readOnly = true)
+    @Query("select ps from Post ps where ps.isApproved=false and ps.businessId=:i")
+    List<Post> getUnApprovedPost(@Param("i") String businessId);
+
+    @Transactional(readOnly = true)
+    @Query("select ps from Post ps where ps.isApproved=true and ps.businessId=:i")
+    List<Post> getBusinessPost(@Param("i") String businessId);
+
+    @Transactional(readOnly = true)
+    @Query("select ps.profileType from Post ps where ps.postId=:p")
+    String getProfileTypeByPostId(@Param("p") String postId);
 }
