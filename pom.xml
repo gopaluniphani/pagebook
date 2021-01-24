@@ -9,9 +9,10 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>pagebook</name>
+  <packaging>pom</packaging>
 
   <modules>
-        
+    <module>stories</module>
   </modules>
 
 </project>
