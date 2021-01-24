@@ -1,7 +1,8 @@
 package com.example.business.services;
 
-import com.example.business.models.Business;
 import org.springframework.stereotype.Service;
+
+import com.example.business.models.Business;
 
 import java.util.List;
 import java.util.Optional;

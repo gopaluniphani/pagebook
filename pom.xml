@@ -12,6 +12,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>business</module>
     <module>stories</module>
   </modules>
 

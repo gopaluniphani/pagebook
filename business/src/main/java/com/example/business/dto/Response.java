@@ -1,4 +1,4 @@
-package com.example.business.models;
+package com.example.business.dto;
 
 public class Response {
     private boolean status;

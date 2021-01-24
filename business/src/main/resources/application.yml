@@ -1,3 +1,6 @@
+server:
+  port: 8772
+
 spring:
   application:
     name: pagebook-business
