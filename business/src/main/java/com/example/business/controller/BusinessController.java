@@ -37,6 +37,12 @@ public class BusinessController {
         return new Response(true, "", newBusiness);
     }
 
+    @PutMapping(value = "/{id}")
+    public Response updateBusiness(@RequestBody Business business, @PathVariable("id") String id) {
+        business.setId(id);
+        return new Response(true, "", businessService.save(business));
+    }
+
     @GetMapping(value = "/{id}")
     public Response retrieveBusinessDetails(@PathVariable("id") String businessId) {
         Optional<Business> business = businessService.findById(businessId);

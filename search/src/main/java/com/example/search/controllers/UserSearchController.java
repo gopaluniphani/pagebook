@@ -21,6 +21,12 @@ public class UserSearchController {
         return userService.save(profile);
     }
 
+    @PutMapping(value = "/{id}")
+    public UserProfile updateProfile(@RequestBody UserProfile profile, @PathVariable("id") String id) {
+        profile.setId(id);
+        return userService.save(profile);
+    }
+
     @GetMapping(value="/findall")
     List<UserProfile> findAll(){
         return userService.findAll();

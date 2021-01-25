@@ -24,6 +24,12 @@ public class BusinessSearchController {
         return businessService.save(profile);
     }
 
+    @PutMapping(value = "/{id}")
+    public BusinessProfile updateProfile(@RequestBody BusinessProfile profile, @PathVariable("id") String id) {
+        profile.setId(id);
+        return businessService.save(profile);
+    }
+
     @GetMapping(value="/findall")
     List<BusinessProfile> findAll(){
         return businessService.findAll();
