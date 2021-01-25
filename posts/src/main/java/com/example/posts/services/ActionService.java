@@ -2,6 +2,8 @@ package com.example.posts.services;
 
 import com.example.posts.entity.Action;
 
+import java.util.List;
+
 public interface ActionService {
 
     int totalLikesByPostId(String postId);
@@ -18,4 +20,11 @@ public interface ActionService {
 
     Action save(Action action);
 
+    List<String> getUserWhoLiked(String postId);
+
+    List<String> getUserWhoDisliked(String postId);
+
+    List<String> getUserOfWowEmoji(String postId);
+
+    List<String> getUserOfSadEmoji(String postId);
 }

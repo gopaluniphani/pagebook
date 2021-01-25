@@ -7,6 +7,7 @@ import com.example.posts.repositories.PostRepository;
 import com.example.posts.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -20,15 +21,13 @@ public class PostServiceImpl implements PostService {
     public Response addPost(Post post) {
         Response response;
         try {
-            if(post.getProfileType() == Constant.PROFILE_TYPE_NORMAL)
+            if(post.getProfileType().equals(Constant.PROFILE_TYPE_NORMAL))
             {
                 post.setApproved(true);
-
+                //todo:fetch friends of given user
+                //here add posts to their friends list
             }
-            else
-            {
-
-            }
+            System.out.println(post);
             Post addedPost = postRepository.save(post);
             response = Response.builder()
                     .status(true)
@@ -78,6 +77,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public String getProfileTypeByPostId(String postId) {
         return postRepository.getProfileTypeByPostId(postId);
+    }
+
+    @Override
+    public Post approvePost(String postId) {
+        Post post = postRepository.approvePost(postId);
+        //todo: fetch followers here
+        //todo: here we have to send post to followers of business.
+        return post;
     }
 
     //todo :

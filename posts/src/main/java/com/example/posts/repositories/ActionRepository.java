@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ActionRepository extends CrudRepository<Action, String> {
 
@@ -31,4 +33,16 @@ public interface ActionRepository extends CrudRepository<Action, String> {
 
     @Query("select act.actionId from Action act where act.userId=:u and act.postId=:p")
     String findActionIdByPostIdAndUserId(@Param("u") String userId, @Param("p") String postId);
+
+    @Query("select act.userId from Action act where act.postId=:p and act.actionType=1")
+    List<String> getUserWhoLiked(@Param("p") String postId);
+
+    @Query("select act.userId from Action act where act.postId=:p and act.actionType=2")
+    List<String> getUserWhoDisliked(@Param("p") String postId);
+
+    @Query("select act.userId from Action act where act.postId=:p and act.actionType=3")
+    List<String> getUserOfWowEmoji(@Param("p") String postId);
+
+    @Query("select act.userId from Action act where act.postId=:p and act.actionType=4")
+    List<String> getUserOfSadEmoji(@Param("p") String postId);
 }

@@ -20,4 +20,6 @@ public interface PostService {
     List<Post> getBusinessPost(String businessId);
 
     String getProfileTypeByPostId(String postId);
+
+    Post approvePost(String postId);
 }

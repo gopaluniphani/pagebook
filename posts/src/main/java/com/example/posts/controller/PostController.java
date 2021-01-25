@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/pagebook/api/post")
 public class PostController {
 
@@ -112,4 +113,73 @@ public class PostController {
         return  response;
     }
 
+    @GetMapping("/getComments")
+    Response getComments(@RequestParam("parentCommentId") String parentCommentId,
+                         @RequestParam("postId") String postId) {
+        Response response = Response.builder()
+                .body( commentService.getComments(parentCommentId, postId))
+                .status(true)
+                .build();
+        return response;
+    }
+
+    @GetMapping("/getUserWhoLiked/{postId}")
+    Response getUserWhoLiked(@PathVariable("postId") String postId)
+    {
+        Response response = Response.builder()
+                .body( actionService.getUserWhoLiked( postId))
+                .status(true)
+                .build();
+        return  response;
+    }
+
+    @GetMapping("/getUserWhoDisliked/{postId}")
+    Response getUserWhoDisliked(@PathVariable("postId") String postId)
+    {
+        Response response = Response.builder()
+                .body( actionService.getUserWhoDisliked( postId))
+                .status(true)
+                .build();
+        return  response;
+    }
+
+    @GetMapping("/getUserOfWowEmoji/{postId}")
+    Response getUserOfWowEmoji(@PathVariable("postId") String postId)
+    {
+        Response response = Response.builder()
+                .body( actionService.getUserOfWowEmoji( postId))
+                .status(true)
+                .build();
+        return  response;
+    }
+
+    @GetMapping("/getUserOfSadEmoji/{postId}")
+    Response getUserOfSadEmoji(@PathVariable("postId") String postId)
+    {
+        Response response = Response.builder()
+                .body( actionService.getUserOfSadEmoji( postId))
+                .status(true)
+                .build();
+        return  response;
+    }
+
+    @PutMapping("/approvePost/{postId}")
+    Response approvePost(@PathVariable("postId") String postId)
+    {
+        Response response = Response.builder()
+                .status(true)
+                .body( postService.approvePost( postId))
+                .build();
+        return response;
+    }
+
+    @PutMapping("/approveComment/{commentId}")
+    Response approveComment(@PathVariable("commentId") String commentId)
+    {
+        Response response = Response.builder()
+                .status(true)
+                .body( commentService.approveComment( commentId))
+                .build();
+        return response;
+    }
 }

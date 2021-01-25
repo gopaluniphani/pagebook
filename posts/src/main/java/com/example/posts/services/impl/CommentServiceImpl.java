@@ -2,12 +2,15 @@ package com.example.posts.services.impl;
 
 import com.example.posts.Constant;
 import com.example.posts.entity.Comment;
+import com.example.posts.model.CommentsDTO;
 import com.example.posts.repositories.CommentRepository;
+import com.example.posts.repositories.PBUserRepository;
 import com.example.posts.repositories.PostRepository;
 import com.example.posts.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +20,8 @@ public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    PBUserRepository pbUserRepository;
 
     @Override
     public int totalCommentsByPostId(String postId) {
@@ -41,6 +46,23 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+    @Override
+    public List<CommentsDTO> getComments(String parentCommentId, String postId) {
+        List<Comment> commentList = commentRepository.getComments(parentCommentId, postId);
+        List<CommentsDTO> commentsDTOList = new ArrayList<>();
+        for(Comment comment : commentList)
+        {
+            CommentsDTO commentsDTO = CommentsDTO.builder()
+                    .comment( comment)
+                    .userName( pbUserRepository.findUserNameByUserId(comment.getUserId()))
+                    .build();
+            commentsDTOList.add( commentsDTO);
+        }
+        return commentsDTOList;
+    }
 
-
+    @Override
+    public Comment approveComment(String commentId) {
+        return commentRepository.approveComment(commentId);
+    }
 }
