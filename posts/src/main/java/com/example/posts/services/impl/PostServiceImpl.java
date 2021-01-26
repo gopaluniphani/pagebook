@@ -76,11 +76,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response findPostByUserId(String userId) {
         Response response;
-        List<Post> posts = postRepository.findPostByUserId(userId);
+        List<Post> postList = postRepository.findPostByUserId(userId);
         List<PostDTO> postDTOS = new ArrayList<>();
-        for(Post post : posts)
+        System.out.println(postList);
+        for(Post post : postList)
         {
             String postId = post.getPostId();
+            //System.out.println("postId : "+postId+" "+"userId : "+userId);
             PostDTO postDTO = PostDTO.builder()
                     .post( post)
                     .userImgURL( pbUserService.findUserImgByUserId(userId))
@@ -90,7 +92,7 @@ public class PostServiceImpl implements PostService {
                     .totalDislikes( actionService.totalDislikesByPostId(postId))
                     .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
                     .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
-                    //.performedAction( actionService.performedActionByUserForPost(postId, userId))
+                    .performedAction( actionService.performedActionByUserForPost(postId, userId))
                     .build();
             postDTOS.add(postDTO);
         }
@@ -129,8 +131,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post approvePost(String postId) {
         Post post = postRepository.approvePost(postId);
+        String businessId = postRepository.getBusinessIdByPostId(postId);
         //todo: fetch followers here
-        //todo: here we have to send post to followers of business.
+        new Thread(() -> {
+            List<String> followerIds = getFollowersList(businessId);
+            System.out.println(followerIds);
+            PostsFeed postsFeed = PostsFeed.builder()
+                    .postId(post.getPostId())
+                    .build();
+            for(String followerId : followerIds)
+            {
+                postsFeed.setUserId(followerId);
+                postsFeedRepository.save(postsFeed);
+            }
+        }).start();
         return post;
     }
 
@@ -143,10 +157,16 @@ public class PostServiceImpl implements PostService {
         return (List<String>) ids.getBody();
     }
 
+    @Override
+    public void unApprovePost(String postId) {
+        postRepository.unApprovePost(postId);
+    }
 
     //todo :
     List<String> getFollowersList(String businessId)
     {
-        return null;
+        FriendsResponse ids = restTemplate.getForObject("http://10.177.1.178:8771/pagebook/api/business" +
+                "/followers/"+businessId,FriendsResponse.class);
+        return (List<String>) ids.getBody();
     }
 }

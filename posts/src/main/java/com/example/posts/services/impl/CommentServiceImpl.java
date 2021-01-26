@@ -65,4 +65,9 @@ public class CommentServiceImpl implements CommentService {
     public Comment approveComment(String commentId) {
         return commentRepository.approveComment(commentId);
     }
+
+    @Override
+    public void unApproveComment(String commentId) {
+        commentRepository.unApproveComment(commentId);
+    }
 }

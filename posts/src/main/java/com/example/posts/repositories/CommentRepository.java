@@ -31,4 +31,9 @@ public interface CommentRepository extends CrudRepository<Comment, String> {
     @Modifying
     @Query("update Comment comment set comment.isApproved=true where comment.commentId=:i")
     Comment approveComment(@Param("i") String commentId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Comment comment where comment.commentId=:i")
+    void unApproveComment(@Param("i") String commentId);
 }

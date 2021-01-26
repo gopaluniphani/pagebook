@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ActionServiceImpl implements ActionService {
@@ -40,7 +41,9 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public int performedActionByUserForPost(String postId, String userId) {
-        return actionRepository.performedActionByUserForPost(postId, userId);
+        Optional<Integer> response = actionRepository.performedActionByUserForPost(postId, userId);
+        if(response.isPresent()) return response.get();
+        else return 0;
     }
 
     @Override

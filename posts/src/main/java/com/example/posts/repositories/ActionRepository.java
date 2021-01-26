@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ActionRepository extends CrudRepository<Action, String> {
@@ -24,7 +25,7 @@ public interface ActionRepository extends CrudRepository<Action, String> {
     int totalSadEmojiByPostId(String postId);
 
     @Query(value = "select action_type from action where post_id=?1 and user_id=?2", nativeQuery = true)
-    int performedActionByUserForPost(String postId, String userId);
+    Optional<Integer> performedActionByUserForPost(String postId, String userId);
 
     @Query("select act.actionId from Action act where act.userId=:u and act.postId=:p")
     String findActionIdByPostIdAndUserId(@Param("u") String userId, @Param("p") String postId);

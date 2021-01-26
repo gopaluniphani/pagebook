@@ -39,7 +39,7 @@ public class PostController {
     @GetMapping("/getUsersPost/{userId}")
     Response getUsersPost(@PathVariable("userId") String userId)
     {
-        System.out.println("In get Users Post : " + userId);
+        //System.out.println("In get Users Post : " + userId);
         return postService.findPostByUserId(userId);
     }
 
@@ -201,6 +201,33 @@ public class PostController {
     {
         System.out.println("Got Id : "+userId);
         postService.getFriendsList(userId);
+    }
+
+    @DeleteMapping("/unApprovePost/{postId}")
+    public Response unApprovePost(@PathVariable("postId") String postId)
+    {
+        postService.unApprovePost(postId);
+        Response response = Response.builder()
+                .status(true)
+                .build();
+        return response;
+    }
+
+    @DeleteMapping("/unApproveComment/{commentId}")
+    public Response unApproveComment(@PathVariable("commentId") String commentId)
+    {
+        commentService.unApproveComment(commentId);
+        Response response = Response.builder()
+                .status(true)
+                .build();
+        return response;
+    }
+
+    //It is created for testing
+    @GetMapping("/getPerformedAction")
+    public int getAction(@RequestParam("postId") String postId, @RequestParam("userId") String userID)
+    {
+        return actionService.performedActionByUserForPost(postId, userID);
     }
 
     @Bean

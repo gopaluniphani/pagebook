@@ -24,4 +24,6 @@ public interface PostService {
     Post approvePost(String postId);
 
     List<String> getFriendsList(String userId);
+
+    void unApprovePost(String postId);
 }

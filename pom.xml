@@ -12,7 +12,9 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>posts</module>      
+    <module>posts</module>
+    <module>profile</module>
+    <module>pagebookdto</module>
   </modules>
 
 </project>

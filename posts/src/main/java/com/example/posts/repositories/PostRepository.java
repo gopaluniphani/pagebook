@@ -38,4 +38,13 @@ public interface PostRepository extends CrudRepository<Post, String> {
     @Modifying
     @Query("update Post ps set ps.isApproved=true where ps.postId=:i")
     Post approvePost(@Param("i") String postId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Post ps where ps.postId=:i")
+    void unApprovePost(@Param("i") String postId);
+
+    @Transactional(readOnly = true)
+    @Query("select ps.businessId from Post ps where ps.postId=:i")
+    String getBusinessIdByPostId(@Param("i") String businessId);
 }
