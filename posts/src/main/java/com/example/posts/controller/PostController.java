@@ -31,7 +31,7 @@ public class PostController {
     @PostMapping
     Response addPost(@RequestBody Post post)
     {
-        //System.out.println("Got post : "+post);
+        //System.out.println("In add Post : "+post);
         return postService.addPost(post);
     }
 
@@ -39,7 +39,7 @@ public class PostController {
     @GetMapping("/getUsersPost/{userId}")
     Response getUsersPost(@PathVariable("userId") String userId)
     {
-        //System.out.println("Getting User post : "+userId);
+        System.out.println("In get Users Post : " + userId);
         return postService.findPostByUserId(userId);
     }
 
@@ -54,7 +54,7 @@ public class PostController {
     @GetMapping("/getFeedPosts/{userId}/{page}")
     Response getFeedPosts(@PathVariable("userId") String userId, @PathVariable("page") int page)
     {
-        System.out.println("in feeds post : "+ userId+" "+page);
+        System.out.println("in get feeds post : "+ userId+" "+page);
         Response response = Response.builder()
                 .status(true)
                 .body(postsFeedService.getPostsFeedByPage(userId, page))
@@ -65,6 +65,7 @@ public class PostController {
     @GetMapping("/getUnapprovedPost/{businessId}")
     Response getUnapprovedPost(@PathVariable("businessId")String businessId)
     {
+        System.out.println("In get Unapproved post : "+businessId);
         Response response = Response.builder()
                 .body(postService.getUnapprovedPost(businessId))
                 .status(true)
@@ -85,6 +86,7 @@ public class PostController {
     @GetMapping("/getBusinessPost/{businessId}")
     Response getBusinessPost(@PathVariable("businessId")String businessId)
     {
+        System.out.println("In get Business Post" + businessId);
         Response response = Response.builder()
                 .body(postService.getBusinessPost(businessId))
                 .status(true)
@@ -95,6 +97,7 @@ public class PostController {
     @PostMapping("/addComment")
     Response addComments(@RequestBody Comment comment)
     {
+        System.out.println("In add comment : " + comment);
         Response response = Response.builder()
                 .body( commentService.addComment( comment))
                 .status(true)
@@ -105,6 +108,7 @@ public class PostController {
     @PostMapping("/addAction")
     Response addAction(@RequestBody Action action)
     {
+        System.out.println("In add Action : " + action);
         Response response;
         String actionId = actionService.findActionIdByPostIdAndUserId(action.getUserId(), action.getPostId());
         if(actionId != null)
@@ -122,6 +126,7 @@ public class PostController {
     @GetMapping("/getComments")
     Response getComments(@RequestParam("parentCommentId") String parentCommentId,
                          @RequestParam("postId") String postId) {
+        System.out.println("In get Comments : " + parentCommentId);
         Response response = Response.builder()
                 .body( commentService.getComments(parentCommentId, postId))
                 .status(true)
@@ -172,6 +177,7 @@ public class PostController {
     @PutMapping("/approvePost/{postId}")
     Response approvePost(@PathVariable("postId") String postId)
     {
+        System.out.println("In approve Post : " + postId);
         Response response = Response.builder()
                 .status(true)
                 .body( postService.approvePost( postId))
@@ -182,6 +188,7 @@ public class PostController {
     @PutMapping("/approveComment/{commentId}")
     Response approveComment(@PathVariable("commentId") String commentId)
     {
+        System.out.println("In approve Comment : " + commentId);
         Response response = Response.builder()
                 .status(true)
                 .body( commentService.approveComment( commentId))
