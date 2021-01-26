@@ -2,13 +2,22 @@ package com.example.posts.services.impl;
 
 import com.example.posts.Constant;
 import com.example.posts.entity.Post;
+import com.example.posts.entity.PostsFeed;
+import com.example.posts.model.FriendsResponse;
+import com.example.posts.model.PostDTO;
 import com.example.posts.model.Response;
 import com.example.posts.repositories.PostRepository;
+import com.example.posts.repositories.PostsFeedRepository;
+import com.example.posts.services.ActionService;
+import com.example.posts.services.CommentService;
+import com.example.posts.services.PBUserService;
 import com.example.posts.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,16 +25,37 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    RestTemplate restTemplate;
+    @Autowired
+    PBUserService pbUserService;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    ActionService actionService;
+    @Autowired
+    PostsFeedRepository postsFeedRepository;
 
     @Override
     public Response addPost(Post post) {
         Response response;
         try {
-            if(post.getProfileType().equals(Constant.PROFILE_TYPE_NORMAL))
+            if(post.getProfileType().equals( Constant.PROFILE_TYPE_PRIVATE) ||
+                post.getProfileType().equals( Constant.PROFILE_TYPE_PUBLIC) )
             {
                 post.setApproved(true);
-                //todo:fetch friends of given user
-                //here add posts to their friends list
+                new Thread(() -> {
+                    List<String> friendsList = getFriendsList(post.getUserId());
+                    System.out.println(friendsList);
+                    PostsFeed postsFeed = PostsFeed.builder()
+                            .postId(post.getPostId())
+                            .build();
+                    for(String friendId : friendsList)
+                    {
+                        postsFeed.setUserId(friendId);
+                        postsFeedRepository.save(postsFeed);
+                    }
+                }).start();
             }
             System.out.println(post);
             Post addedPost = postRepository.save(post);
@@ -47,9 +77,26 @@ public class PostServiceImpl implements PostService {
     public Response findPostByUserId(String userId) {
         Response response;
         List<Post> posts = postRepository.findPostByUserId(userId);
+        List<PostDTO> postDTOS = new ArrayList<>();
+        for(Post post : posts)
+        {
+            String postId = post.getPostId();
+            PostDTO postDTO = PostDTO.builder()
+                    .post( post)
+                    .userImgURL( pbUserService.findUserImgByUserId(userId))
+                    .userName( pbUserService.findUserNameByUserId(userId))
+                    .totalComments( commentService.totalCommentsByPostId( postId))
+                    .totalLikes( actionService.totalLikesByPostId(postId))
+                    .totalDislikes( actionService.totalDislikesByPostId(postId))
+                    .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
+                    .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
+                    //.performedAction( actionService.performedActionByUserForPost(postId, userId))
+                    .build();
+            postDTOS.add(postDTO);
+        }
         response = Response.builder()
                 .status(true)
-                .body(posts)
+                .body(postDTOS)
                 .build();
         return  response;
     }
@@ -87,11 +134,15 @@ public class PostServiceImpl implements PostService {
         return post;
     }
 
-    //todo :
-    List<String> getFriendsList(String userId)
-    {
-        return null;
+    @Override
+    public List<String> getFriendsList(String userId) {
+        System.out.println("got UserId in get friends list : "+ userId);
+        FriendsResponse ids = restTemplate.getForObject("http://10.177.2.27:9002/pagebook/api/profile/getFriendsId" +
+                "/"+userId, FriendsResponse.class);
+        System.out.println(ids);
+        return (List<String>) ids.getBody();
     }
+
 
     //todo :
     List<String> getFollowersList(String businessId)

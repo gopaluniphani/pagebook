@@ -11,24 +11,19 @@ import java.util.List;
 @Repository
 public interface ActionRepository extends CrudRepository<Action, String> {
 
-    @Query(value = "select count(*) from action where post_id=?1 and action_type=1 and " +
-            "is_active=true", nativeQuery = true)
+    @Query(value = "select count(*) from action where post_id=?1 and action_type=1", nativeQuery = true)
     int totalLikesByPostId(String postId);
 
-    @Query(value = "select count(*) from action where post_id=?1 and action_type=2 and " +
-            "is_active=true", nativeQuery = true)
+    @Query(value = "select count(*) from action where post_id=?1 and action_type=2", nativeQuery = true)
     int totalDislikesByPostId(String postId);
 
-    @Query(value = "select count(*) from action where post_id=?1 and action_type=3 and " +
-            "is_active=true", nativeQuery = true)
+    @Query(value = "select count(*) from action where post_id=?1 and action_type=3", nativeQuery = true)
     int totalWowEmojiByPostId(String postId);
 
-    @Query(value = "select count(*) from action where post_id=?1 and action_type=4 and " +
-            "is_active=true", nativeQuery = true)
+    @Query(value = "select count(*) from action where post_id=?1 and action_type=4", nativeQuery = true)
     int totalSadEmojiByPostId(String postId);
 
-    @Query(value = "select action_type from action where post_id=?1 and user_id=?2 " +
-            "and is_active=true", nativeQuery = true)
+    @Query(value = "select action_type from action where post_id=?1 and user_id=?2", nativeQuery = true)
     int performedActionByUserForPost(String postId, String userId);
 
     @Query("select act.actionId from Action act where act.userId=:u and act.postId=:p")

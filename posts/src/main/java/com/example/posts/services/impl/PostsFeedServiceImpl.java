@@ -47,7 +47,7 @@ public class PostsFeedServiceImpl implements PostsFeedService {
                     .totalDislikes( actionService.totalDislikesByPostId(postId))
                     .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
                     .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
-                    .performedAction( actionService.performedActionByUserForPost(postId, userId))
+                    //.performedAction( actionService.performedActionByUserForPost(postId, userId))
                     .build();
             postDTOS.add(postDTO);
         }
@@ -57,6 +57,11 @@ public class PostsFeedServiceImpl implements PostsFeedService {
     @Override
     public void addToFeedsOfUser(PostsFeed postFeed) {
         postsFeedRepository.save(postFeed);
+    }
+
+    @Override
+    public void save(PostsFeed postsFeed) {
+        postsFeedRepository.save(postsFeed);
     }
 
 }

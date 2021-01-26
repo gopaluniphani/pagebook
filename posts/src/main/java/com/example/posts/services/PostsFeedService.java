@@ -10,4 +10,7 @@ public interface PostsFeedService {
     List<PostDTO> getPostsFeedByPage(String userId, int page);
 
     void addToFeedsOfUser(PostsFeed postFeed);
+
+    void save(PostsFeed postsFeed);
+
 }

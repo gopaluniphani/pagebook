@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment addComment(Comment comment) {
         String profileType = postRepository.getProfileTypeByPostId(comment.getPostId());
-        if(profileType.equals( Constant.PROFILE_TYPE_NORMAL))
+        if(profileType.equals( Constant.PROFILE_TYPE_PUBLIC) || profileType.equals( Constant.PROFILE_TYPE_PRIVATE))
         {
             comment.setApproved(true);
         }

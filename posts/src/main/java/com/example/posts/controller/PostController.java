@@ -7,7 +7,9 @@ import com.example.posts.entity.PostsFeed;
 import com.example.posts.model.Response;
 import com.example.posts.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
@@ -29,6 +31,7 @@ public class PostController {
     @PostMapping
     Response addPost(@RequestBody Post post)
     {
+        //System.out.println("Got post : "+post);
         return postService.addPost(post);
     }
 
@@ -36,6 +39,7 @@ public class PostController {
     @GetMapping("/getUsersPost/{userId}")
     Response getUsersPost(@PathVariable("userId") String userId)
     {
+        //System.out.println("Getting User post : "+userId);
         return postService.findPostByUserId(userId);
     }
 
@@ -48,8 +52,9 @@ public class PostController {
 
 
     @GetMapping("/getFeedPosts/{userId}/{page}")
-    Response gePostsFeed(@PathVariable("userId") String userId, @PathVariable("page") int page)
+    Response getFeedPosts(@PathVariable("userId") String userId, @PathVariable("page") int page)
     {
+        System.out.println("in feeds post : "+ userId+" "+page);
         Response response = Response.builder()
                 .status(true)
                 .body(postsFeedService.getPostsFeedByPage(userId, page))
@@ -106,6 +111,7 @@ public class PostController {
         {
             action.setActionId( actionId);
         }
+        System.out.println(action);
         response = Response.builder()
                 .body(actionService.save(action))
                 .status(true)
@@ -181,5 +187,18 @@ public class PostController {
                 .body( commentService.approveComment( commentId))
                 .build();
         return response;
+    }
+
+    @GetMapping("/fetchFriendIds/{userId}")
+    public void findFriendsIds(@PathVariable("userId") String userId)
+    {
+        System.out.println("Got Id : "+userId);
+        postService.getFriendsList(userId);
+    }
+
+    @Bean
+    RestTemplate getRestTemplate()
+    {
+        return new RestTemplate();
     }
 }

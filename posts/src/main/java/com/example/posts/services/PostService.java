@@ -22,4 +22,6 @@ public interface PostService {
     String getProfileTypeByPostId(String postId);
 
     Post approvePost(String postId);
+
+    List<String> getFriendsList(String userId);
 }
