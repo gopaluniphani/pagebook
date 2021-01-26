@@ -91,6 +91,6 @@ public class MQConfig {
 
     @Bean
     public Queue incomingDeleteRequestQueue() {
-        return new Queue(RECEIVE_DELETE_REQUEST_QUEUE);
+        return new Queue(RECEIVE_FRIENDS_LIST_TO_DELETE_QUEUE);
     }
 }

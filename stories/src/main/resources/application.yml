@@ -6,8 +6,8 @@ spring:
     name: pagebook-stories
   rabbitmq:
     host: localhost
-    username: guest
-    password: guest
+    username: pagebook
+    password: pagebook
     virtual-host: /
   data:
     mongodb:
@@ -21,7 +21,7 @@ eureka:
   client:
     registerWithEureka: true
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://10.177.2.21:8761/eureka}
+      defaultZone: ${EUREKA_SERVER:http://10.177.2.29:8761/eureka}
 
 management:
   endpoints:

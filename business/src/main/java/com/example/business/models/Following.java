@@ -1,4 +1,4 @@
-package com.example.stories.models;
+package com.example.business.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document
-public class StoryFeed {
+public class Following {
 
     @Id
     private String id;
     private String userId;
-    private List<String> stories;
+    private List<String> following;
 
-    public StoryFeed() {
-        this.stories = new ArrayList<>();
+    public Following() {
+        this.following = new ArrayList<>();
     }
 
     public String getId() {
@@ -34,19 +34,16 @@ public class StoryFeed {
         this.userId = userId;
     }
 
-    public List<String> getStories() {
-        return stories;
+    public List<String> getFollowing() {
+        return following;
     }
 
-    public void setStories(List<String> stories) {
-        this.stories = stories;
+    public void setFollowing(List<String> following) {
+        this.following = following;
     }
 
-    public void addStory(String storyId) {
-        this.stories.add(storyId);
+    public void addFollowing(String businessId) {
+        this.following.add(businessId);
     }
 
-    public void removeStory(String storyId) {
-        this.stories.remove(storyId);
-    }
 }

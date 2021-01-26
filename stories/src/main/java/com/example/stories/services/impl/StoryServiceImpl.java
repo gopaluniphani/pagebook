@@ -29,4 +29,9 @@ public class StoryServiceImpl implements StoryService {
     public Optional<List<Story>> findByUserId(String id) {
         return storyRepository.findByUserId(id);
     }
+
+    @Override
+    public void deleteById(String id) {
+        storyRepository.deleteById(id);
+    }
 }

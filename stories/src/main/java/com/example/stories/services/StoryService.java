@@ -11,4 +11,5 @@ public interface StoryService {
     Story save(Story story);
     Optional<Story> findById(String id);
     Optional<List<Story>> findByUserId(String id);
+    void deleteById(String id);
 }
