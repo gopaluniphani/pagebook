@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/pagebook/api/search/user/")
+@RequestMapping("/pagebook/api/search/user")
 public class UserSearchController {
 
     @Autowired

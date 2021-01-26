@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(value = "/pagebook/api/storyfeed/")
+@RequestMapping(value = "/pagebook/api/story/feed")
 public class StoryFeedController {
 
     @Autowired

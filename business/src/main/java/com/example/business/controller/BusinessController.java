@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(value = "/pagebook/api/business/")
+@RequestMapping(value = "/pagebook/api/business")
 public class BusinessController {
 
     @Autowired

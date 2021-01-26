@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/pagebook/api/search/business/")
+@RequestMapping("/pagebook/api/search/business")
 public class BusinessSearchController {
 
     @Autowired
