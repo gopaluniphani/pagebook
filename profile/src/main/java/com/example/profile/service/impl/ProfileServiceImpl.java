@@ -4,7 +4,10 @@ import com.example.profile.entity.Friend;
 import com.example.profile.entity.Profile;
 import com.example.profile.repository.ProfileRepository;
 import com.example.profile.service.ProfileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.UpdateProfileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +22,20 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     ProfileRepository profileRepository;
 
+//    @Autowired
+//    KafkaTemplate<String, UpdateProfileDTO> kafkaTemplate;
+
     @Override
     public Profile save(Profile profile){
-        return profileRepository.save(profile);
+
+        Profile profile1 = profileRepository.save(profile);
+        UpdateProfileDTO updateProfileDTO = UpdateProfileDTO.builder()
+                .userName(profile.getFirstName())
+                .userId(profile.getUserId())
+                .userImgURL(profile.getImgUrl())
+                .build();
+//        kafkaTemplate.send("updateProfile", "key", updateProfileDTO);
+        return profile1;
     }
 
     @Override
@@ -83,7 +97,15 @@ public class ProfileServiceImpl implements ProfileService {
     public void updateImg(String userId, String imgUrl) {
         profileRepository.updateImg(userId, imgUrl);
         Profile profile = profileRepository.findById(userId).get();
+        UpdateProfileDTO updateProfileDTO = UpdateProfileDTO.builder()
+                .userImgURL(imgUrl)
+                .userId(userId)
+                .userName(findUserNameById(userId))
+                .build();
 
+//        ObjectMapper objectMapper;
+//        objectMapper.
+//        kafkaTemplate.send("updateProfile", updateProfileDTO);
     }
 
 

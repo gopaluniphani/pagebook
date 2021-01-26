@@ -10,14 +10,18 @@ import com.example.profile.service.FriendService;
 import com.example.profile.service.ProfileService;
 import com.example.profile.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping ("/pagebook/api/profile/")
+@RequestMapping ("/pagebook/api/profile")
 public class UserProfileController {
 
     @Autowired
@@ -29,9 +33,10 @@ public class UserProfileController {
     @Autowired
     RequestService requestService;
 
-    @PostMapping
+    @PostMapping("/save")
     public Response addUser(@RequestBody Profile profile){
         Response response = new Response();
+
         response.setBody(profileService.save(profile));
         response.setStatus(true);
         return response;
@@ -44,7 +49,7 @@ public class UserProfileController {
     public Response save(@RequestBody Friend friend){
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( friendService.save(friend));
+        response.setBody(friendService.save(friend));
 
         return response;
 
@@ -63,7 +68,8 @@ public class UserProfileController {
         friends.add(friend);
         friends.add(friendService.save(friend1));
         friends.add(friendService.save(friend));
-        response.setBody( friends);
+
+        response.setBody(friends);
 
         return response;
 
@@ -73,7 +79,7 @@ public class UserProfileController {
     public Response save(@RequestBody Request request){
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( requestService.save(request));
+        response.setBody(requestService.save(request));
         return response;
     }
 
@@ -83,35 +89,41 @@ public class UserProfileController {
         profileService.addTotalFriend(userId);
     }
 
-    @GetMapping("img/{userId}")
+    @GetMapping("/img/{userId}")
     public Response getImgUrlById(@PathVariable("userId") String userId)
     {
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( profileService.getImgUrlById(userId));
+        response.setBody(profileService.getImgUrlById(userId));
         return response;
     }
 
-    @GetMapping("profileType/{userId}")
+    @GetMapping("/profileType/{userId}")
     public Response getProfileTypeById(@PathVariable("userId") String userId)
     {
         Response response = new Response();
         response.setStatus(true);
         response.setBody(profileService.getProfileTypeById(userId));
         return response;
-
     }
     //to find profile using using email
-    @GetMapping("userProfile/{email}")
+    @GetMapping("/userProfile/{email}")
     public Response getProfileByEmail(@PathVariable("email") String email)
     {
         Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.getProfileByEmail(email));
+        Profile profile = profileService.getProfileByEmail(email);
+        if(profile != null) {
+            response.setStatus(true);
+            response.setBody(profile);
+        } else {
+            response.setStatus(false);
+            response.setErrorMessage("no user exists with that email");
+        }
+
         return response;
     }
 
-    @GetMapping("userProfileById/{userId}")
+    @GetMapping("/userProfileById/{userId}")
     public Response getProfileById(@PathVariable("userId") String userId)
     {
         Response response = new Response();
@@ -119,20 +131,20 @@ public class UserProfileController {
         response.setBody(profileService.getProfileById(userId));
         return response;
     }
-    @GetMapping("interest/{userId}")
+    @GetMapping("/interest/{userId}")
     public Response getInterestById(@PathVariable("userId") String userId)
     {
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( profileService.getInterestById(userId));
+        response.setBody(profileService.getInterestById(userId));
         return response;
     }
-    @GetMapping("friendName/{userId}")
+    @GetMapping("/friendName/{userId}")
     public Response findUserNameById(@PathVariable("userId") String userId)
     {
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( profileService.findUserNameById(userId));
+        response.setBody(profileService.findUserNameById(userId));
         return response;
     }
 
@@ -141,7 +153,7 @@ public class UserProfileController {
     {
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( profileService.findAll());
+        response.setBody(profileService.findAll());
         return response;
     }
 
@@ -170,11 +182,11 @@ public class UserProfileController {
     {
         Response response = new Response();
         response.setStatus(true);
-        response.setBody( requestService.findRequestorNameById(userId));
+        response.setBody(requestService.findRequestorNameById(userId));
         return response;
     }
 
-    @DeleteMapping("deleteRequest/{userId}")
+    @DeleteMapping("/deleteRequest/{userId}")
     public void deleteRequestById(@PathVariable("userId") String userId)
     {
          requestService.deleteRequestById(userId);
@@ -222,6 +234,7 @@ public class UserProfileController {
             friendsDTOS.add( friendsDTO);
 
         }
+
         response.setBody(friendsDTOS);
         response.setStatus(true);
 
@@ -234,8 +247,14 @@ public class UserProfileController {
     public Response getFriendsId(@PathVariable("userId") String userId)
     {
         Response response = new Response();
-        response.setBody( friendService.findFriendId(userId));
+        response.setBody(friendService.findFriendId(userId));
         response.setStatus(true);
         return response;
+    }
+
+    @Bean
+    RestTemplate getRestTemplate()
+    {
+        return new RestTemplate();
     }
 }

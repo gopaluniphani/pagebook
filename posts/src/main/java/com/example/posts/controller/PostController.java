@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RequestMapping("/pagebook/api/post")
 public class PostController {
 
@@ -39,7 +39,7 @@ public class PostController {
     @GetMapping("/getUsersPost/{userId}")
     Response getUsersPost(@PathVariable("userId") String userId)
     {
-        //System.out.println("In get Users Post : " + userId);
+        System.out.println("In get Users Post : " + userId);
         return postService.findPostByUserId(userId);
     }
 

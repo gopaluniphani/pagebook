@@ -1,5 +1,6 @@
 package com.example.posts.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @Entity
+@Builder
 @Table(name = "pbuser")
 public class User {
 

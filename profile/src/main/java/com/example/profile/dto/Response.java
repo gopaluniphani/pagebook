@@ -1,11 +1,13 @@
 package com.example.profile.dto;
 
 
+import java.util.Map;
+
 public class Response {
 
     Object body;
 
-    String error;
+    String errorMessage;
 
     boolean status;
 
@@ -17,12 +19,12 @@ public class Response {
         this.body = body;
     }
 
-    public String getError() {
-        return error;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public boolean isStatus() {
@@ -37,7 +39,7 @@ public class Response {
     public String toString() {
         return "Response{" +
                 "body=" + body +
-                ", error='" + error + '\'' +
+                ", error='" + errorMessage + '\'' +
                 ", status=" + status +
                 '}';
     }
