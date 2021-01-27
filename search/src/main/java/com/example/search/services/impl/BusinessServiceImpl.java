@@ -55,7 +55,7 @@ public class BusinessServiceImpl implements BusinessService {
     public List<BusinessProfile> processSearch(String query) {
         QueryBuilder queryBuilder=
                 QueryBuilders
-                        .multiMatchQuery(query,"name", "description")
+                        .multiMatchQuery("*" + query + "*","name", "description")
                         .fuzziness(Fuzziness.AUTO);
 
         Query searchQuery=new NativeSearchQueryBuilder()

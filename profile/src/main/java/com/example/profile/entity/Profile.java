@@ -26,6 +26,10 @@ public class Profile {
     private String profileType;
     private Integer totalFriends;
 
+    public Profile() {
+        this.totalFriends = 0;
+    }
+
     public String getUserId() {
         return userId;
     }

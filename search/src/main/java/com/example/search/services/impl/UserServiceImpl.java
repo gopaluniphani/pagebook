@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
     public List<UserProfile> processSearch(String query) {
         QueryBuilder queryBuilder=
                 QueryBuilders
-                        .multiMatchQuery(query,"firstName", "lastName")
+                        .multiMatchQuery("*" + query + "*","firstName", "lastName")
+                        .lenient(true)
                         .fuzziness(Fuzziness.AUTO);
 
         Query searchQuery=new NativeSearchQueryBuilder()

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     ProfileRepository profileRepository;
+
+    @Autowired
+    RestTemplate restTemplate;
 
 //    @Autowired
 //    KafkaTemplate<String, UpdateProfileDTO> kafkaTemplate;
@@ -34,7 +38,12 @@ public class ProfileServiceImpl implements ProfileService {
                 .userId(profile.getUserId())
                 .userImgURL(profile.getImgUrl())
                 .build();
-//        kafkaTemplate.send("updateProfile", "key", updateProfileDTO);
+
+        new Thread(() -> {
+            System.out.println("Created new thread " + updateProfileDTO);
+            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+        }).start();
+
         return profile1;
     }
 
@@ -103,9 +112,9 @@ public class ProfileServiceImpl implements ProfileService {
                 .userName(findUserNameById(userId))
                 .build();
 
-//        ObjectMapper objectMapper;
-//        objectMapper.
-//        kafkaTemplate.send("updateProfile", updateProfileDTO);
+        new Thread(() -> {
+            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+        }).start();
     }
 
 

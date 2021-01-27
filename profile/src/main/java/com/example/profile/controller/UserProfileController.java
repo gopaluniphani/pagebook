@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
 @RestController
 @RequestMapping ("/pagebook/api/profile")
 public class UserProfileController {
@@ -56,6 +55,8 @@ public class UserProfileController {
         List<Friend> friends = new ArrayList<>();
         friends.add(friendService.save(friend1));
         friends.add(friendService.save(friend));
+        profileService.addTotalFriend(friend.getUserId());
+        profileService.addTotalFriend(friend.getFriendId());
         return friends;
 
     }
@@ -117,8 +118,11 @@ public class UserProfileController {
         profileService.updateImg(userId, imgUrl);
     }
 
-//    @PutMapping("/updateUser")
-//    public  void updateUser(@RequestBody Profile profile)
+    @PutMapping("/updateUser/{userId}")
+    public Profile updateUser(@RequestBody Profile profile, @PathVariable("userId") String userId) {
+        profile.setUserId(userId);
+        return profileService.save(profile);
+    }
 //    @GetMapping("/findFriendList")
 //    public List<String> getNameFromId()
 //    {
