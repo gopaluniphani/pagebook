@@ -137,10 +137,9 @@ public class UserProfileController {
         return requestService.findRequestorNameById(userId);
     }
 
-    @DeleteMapping("/deleteRequest/{userId}")
-    public void deleteRequestById(@PathVariable("userId") String userId)
-    {
-         requestService.deleteRequestById(userId);
+    @DeleteMapping("deleteRequest")
+    public void deleteRequestById(@RequestParam("requestorId")String requestorId, @RequestParam("userId") String userId){
+        requestService.deleteRequestById(requestorId,userId);
     }
 
     //for showing requestor list in front-end with names and img.
