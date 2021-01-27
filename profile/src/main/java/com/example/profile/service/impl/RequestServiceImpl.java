@@ -50,8 +50,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public void deleteRequestById(String userId)
+    public void deleteRequestById(String requestorId, String userId)
     {
-        requestRepository.deleteRequestById(userId);
+        requestRepository.deleteRequestById(requestorId,userId);
     }
 }

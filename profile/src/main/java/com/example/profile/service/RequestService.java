@@ -10,5 +10,5 @@ public interface RequestService {
     List<String> findRequestorId(String userId);
     List<String>getRequestorNameFromId(List<String> friendIdList);
     List<String> findRequestorNameById(String userId);
-    void deleteRequestById(String userId);
+    void deleteRequestById(String requestorId, String userId);
 }

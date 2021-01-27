@@ -24,7 +24,7 @@ public interface RequestRepository extends CrudRepository<Request,String> {
 
     @Transactional
     @Modifying
-    @Query("delete from Request pr where pr.requestorId=:i")
-    void deleteRequestById(@Param("i") String requestorId);
+    @Query("delete from Request pr where pr.requestorId=:i AND pr.userId=:u")
+    void deleteRequestById(@Param("i") String requestorId,@Param("u") String userId);
 
 }
