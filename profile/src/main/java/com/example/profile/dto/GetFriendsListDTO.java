@@ -8,6 +8,7 @@ public class GetFriendsListDTO {
     private List<String> friendsList;
     private String storyId;
 
+
     public List<String> getFriendsList() {
         return friendsList;
     }

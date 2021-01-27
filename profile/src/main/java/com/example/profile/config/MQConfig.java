@@ -14,14 +14,11 @@ import java.util.Map;
 
 @Configuration
 public class MQConfig {
-//    public static final String SEND_USER_ID_QUEUE = "sendUserId";
+
+    public static final String REQUEST_FRIENDS_LIST_QUEUE = "requestFriendsList";
     public static final String RECEIVE_FRIENDS_LIST_QUEUE = "receiveFriendsList";
-//    public static final String SEND_DELETE_REQUEST_QUEUE = "sendDeleteRequest";
     public static final String RECEIVE_DELETE_REQUEST_QUEUE = "receiveDeleteRequest";
-    public static final String SEND_FRIENDS_LIST_QUEUE = "sendFriendsList";
-    public static final String RECEIVE_FRIENDS_LIST_QUEUE_TO_DELETE_QUEUE = "receiveFriendsListToDelete";
-
-
+    public static final String RECEIVE_FRIENDS_LIST_TO_DELETE_QUEUE = "receiveFriendsListToDelete";
 
     @Autowired
     private ConnectionFactory cachingConnectionFactory;
@@ -43,16 +40,13 @@ public class MQConfig {
 
     @Bean
     public Queue sendFriendListQueue() {
-        Map<String, Object> args = new HashMap<String, Object>();
-
-        return new Queue(RECEIVE_FRIENDS_LIST_QUEUE, false, false, false, args);
+        return new Queue(RECEIVE_FRIENDS_LIST_QUEUE);
     }
 
     @Bean
     public Queue sendFriendListToDeleteQueue() {
         Map<String, Object> args = new HashMap<String, Object>();
-
-        return new Queue(RECEIVE_FRIENDS_LIST_QUEUE_TO_DELETE_QUEUE, false, false, false, args);
+        return new Queue(RECEIVE_FRIENDS_LIST_TO_DELETE_QUEUE);
     }
 
     @Bean
@@ -75,7 +69,7 @@ public class MQConfig {
 
     @Bean
     public Queue incomingFriendsRequestQueue() {
-        return new Queue(SEND_FRIENDS_LIST_QUEUE);
+        return new Queue(REQUEST_FRIENDS_LIST_QUEUE);
     }
 
     @Bean

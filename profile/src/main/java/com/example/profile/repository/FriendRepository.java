@@ -20,6 +20,8 @@ public interface FriendRepository extends CrudRepository<Friend,String> {
     String findFriendName(String friendId);
 
     @Transactional(readOnly = true)
-    @Query(value = "select friend_id from Friend where user_id=?1", nativeQuery = true)
+    @Query(value = "select friend_id from friend where user_id=?1", nativeQuery = true)
     List<String> findFriendId(String userId);
+
+    List<Friend> findByUserId(String userId);
 }

@@ -1,14 +1,15 @@
 package com.example.profile.controller;
 
-import com.example.profile.dto.FriendsDTO;
-import com.example.profile.dto.RequestorDTO;
-import com.example.profile.dto.Response;
+import com.example.profile.config.MQConfig;
+import com.example.profile.dto.*;
 import com.example.profile.entity.Friend;
 import com.example.profile.entity.Profile;
 import com.example.profile.entity.Request;
 import com.example.profile.service.FriendService;
 import com.example.profile.service.ProfileService;
 import com.example.profile.service.RequestService;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
@@ -34,53 +35,34 @@ public class UserProfileController {
     RequestService requestService;
 
     @PostMapping("/save")
-    public Response addUser(@RequestBody Profile profile){
-        Response response = new Response();
-
-        response.setBody(profileService.save(profile));
-        response.setStatus(true);
-        return response;
+    public Profile addUser(@RequestBody Profile profile){
+        return profileService.save(profile);
     }
 //    public Response save(@RequestBody Profile profile){
 //        Response profileService.save(profile);
 //    }
 
     @PostMapping("/addFriend")
-    public Response save(@RequestBody Friend friend){
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(friendService.save(friend));
-
-        return response;
-
+    public Friend save(@RequestBody Friend friend){
+        return friendService.save(friend);
     }
 
     @PostMapping("/addNewFriend")
-    public Response addnewFriend(@RequestBody Friend friend){
-        Response response = new Response();
-        response.setStatus(true);
-
+    public List<Friend> addnewFriend(@RequestBody Friend friend){
         Friend friend1=new Friend();
         friend1.setUserId(friend.getFriendId());
         friend1.setFriendId(friend.getUserId());
 
         List<Friend> friends = new ArrayList<>();
-        friends.add(friend);
         friends.add(friendService.save(friend1));
         friends.add(friendService.save(friend));
-
-        response.setBody(friends);
-
-        return response;
+        return friends;
 
     }
 
     @PostMapping("/addRequest")
-    public Response save(@RequestBody Request request){
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(requestService.save(request));
-        return response;
+    public Request save(@RequestBody Request request){
+        return requestService.save(request);
     }
 
     @PutMapping("/addTotalFriend/{userId}")
@@ -90,71 +72,43 @@ public class UserProfileController {
     }
 
     @GetMapping("/img/{userId}")
-    public Response getImgUrlById(@PathVariable("userId") String userId)
+    public String getImgUrlById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.getImgUrlById(userId));
-        return response;
+        return profileService.getImgUrlById(userId);
     }
 
     @GetMapping("/profileType/{userId}")
-    public Response getProfileTypeById(@PathVariable("userId") String userId)
+    public String getProfileTypeById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.getProfileTypeById(userId));
-        return response;
+        return profileService.getProfileTypeById(userId);
     }
     //to find profile using using email
     @GetMapping("/userProfile/{email}")
-    public Response getProfileByEmail(@PathVariable("email") String email)
+    public Profile getProfileByEmail(@PathVariable("email") String email)
     {
-        Response response = new Response();
-        Profile profile = profileService.getProfileByEmail(email);
-        if(profile != null) {
-            response.setStatus(true);
-            response.setBody(profile);
-        } else {
-            response.setStatus(false);
-            response.setErrorMessage("no user exists with that email");
-        }
-
-        return response;
+        return profileService.getProfileByEmail(email);
     }
 
     @GetMapping("/userProfileById/{userId}")
-    public Response getProfileById(@PathVariable("userId") String userId)
+    public Profile getProfileById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.getProfileById(userId));
-        return response;
+        return profileService.getProfileById(userId);
     }
     @GetMapping("/interest/{userId}")
-    public Response getInterestById(@PathVariable("userId") String userId)
+    public String getInterestById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.getInterestById(userId));
-        return response;
+        return profileService.getInterestById(userId);
     }
     @GetMapping("/friendName/{userId}")
-    public Response findUserNameById(@PathVariable("userId") String userId)
+    public String findUserNameById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.findUserNameById(userId));
-        return response;
+        return profileService.findUserNameById(userId);
     }
 
     @GetMapping("/findAll")
-    public Response findAllProduct()
+    public List<Profile> findAllProduct()
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(profileService.findAll());
-        return response;
+        return profileService.findAll();
     }
 
     @PutMapping("/updateImg")
@@ -178,12 +132,9 @@ public class UserProfileController {
 //    }
 
     @GetMapping("/findRequestorList/{userId}")
-    public Response findRequestorNameById(@PathVariable("userId") String userId)
+    public List<String> findRequestorNameById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setStatus(true);
-        response.setBody(requestService.findRequestorNameById(userId));
-        return response;
+        return requestService.findRequestorNameById(userId);
     }
 
     @DeleteMapping("/deleteRequest/{userId}")
@@ -194,9 +145,8 @@ public class UserProfileController {
 
     //for showing requestor list in front-end with names and img.
     @GetMapping("/getRequestorList/{userId}")
-    public Response getRequestorList(@PathVariable("userId") String userId)
+    public List<RequestorDTO> getRequestorList(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
 
         List<String> requestorIds =  requestService.findRequestorId(userId);
 
@@ -213,16 +163,13 @@ public class UserProfileController {
             requestorDTOS.add( requestorDTO);
         }
 
-        response.setBody(requestorDTOS);
-        response.setStatus(true);
-        return response;
+        return requestorDTOS;
     }
 
     //It is when showing list to user of his friend.
     @GetMapping("/findFriendList/{userId}")
-    public Response findFriendNameById(@PathVariable("userId") String userId)
+    public List<FriendsDTO> findFriendNameById(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
         List<String> friendIds =  friendService.findFriendId(userId);
         List<FriendsDTO> friendsDTOS = new ArrayList<>();
 
@@ -234,27 +181,51 @@ public class UserProfileController {
             friendsDTOS.add( friendsDTO);
 
         }
-
-        response.setBody(friendsDTOS);
-        response.setStatus(true);
-
-
-        return response;
+        return friendsDTOS;
     }
 
     //It is when only Id required.
     @GetMapping("/getFriendsId/{userId}")
-    public Response getFriendsId(@PathVariable("userId") String userId)
+    public List<String> getFriendsId(@PathVariable("userId") String userId)
     {
-        Response response = new Response();
-        response.setBody(friendService.findFriendId(userId));
-        response.setStatus(true);
-        return response;
+        return friendService.findFriendId(userId);
     }
 
     @Bean
     RestTemplate getRestTemplate()
     {
         return new RestTemplate();
+    }
+
+    @Autowired
+    private RabbitTemplate sendFriendList;
+
+    @Autowired
+    private RabbitTemplate sendFriendListToDelete;
+
+
+    @RabbitListener(queues = MQConfig.REQUEST_FRIENDS_LIST_QUEUE)
+    public void sendFriendList(RequestFriendsListDTO friendsListDTO) {
+        GetFriendsListDTO getFriendsListDTO = new GetFriendsListDTO();
+        getFriendsListDTO.setStoryId(friendsListDTO.getStoryId());
+        List<Friend> friends = friendService.findByUserId(friendsListDTO.getUserId());
+        System.out.println("Inside sending friends list");
+        for(Friend friend : friends) {
+            System.out.println(friend.getFriendId());
+            getFriendsListDTO.addFriend(friend.getFriendId());
+        }
+        sendFriendList.convertAndSend(getFriendsListDTO);
+    }
+
+    @RabbitListener(queues = MQConfig.RECEIVE_DELETE_REQUEST_QUEUE)
+    public void sendFriendListToDelete(RequestFriendsListDTO friendsListDTO) {
+        GetFriendsListDTO getFriendsListDTO = new GetFriendsListDTO();
+        getFriendsListDTO.setStoryId(friendsListDTO.getStoryId());
+        System.out.println("Inside sending friends list to delete");
+        List<Friend> friends = friendService.findByUserId(friendsListDTO.getUserId());
+        for(Friend friend : friends) {
+            getFriendsListDTO.addFriend(friend.getFriendId());
+        }
+        sendFriendListToDelete.convertAndSend(getFriendsListDTO);
     }
 }

@@ -18,26 +18,5 @@ public class MQListeners {
     @Autowired
     FriendService friendService;
 
-    @Autowired
-    private RabbitTemplate sendFriendList;
 
-    @Autowired
-    private RabbitTemplate sendFriendListToDelete;
-
-
-    @RabbitListener(queues = MQConfig.SEND_FRIENDS_LIST_QUEUE)
-    public void sendFriendList(RequestFriendsListDTO friendsListDTO) {
-        GetFriendsListDTO getFriendsListDTO = new GetFriendsListDTO();
-        getFriendsListDTO.setStoryId(friendsListDTO.getStoryId());
-        getFriendsListDTO.setFriendsList(friendService.findFriendId(friendsListDTO.getUserId()));
-        sendFriendList.convertAndSend(getFriendsListDTO);
-    }
-
-    @RabbitListener(queues = MQConfig.RECEIVE_DELETE_REQUEST_QUEUE)
-    public void sendFriendListToDelete(RequestFriendsListDTO friendsListDTO) {
-        GetFriendsListDTO getFriendsListDTO = new GetFriendsListDTO();
-        getFriendsListDTO.setStoryId(friendsListDTO.getStoryId());
-        getFriendsListDTO.setFriendsList(friendService.findFriendId(friendsListDTO.getUserId()));
-        sendFriendListToDelete.convertAndSend(getFriendsListDTO);
-    }
 }

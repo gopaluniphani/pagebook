@@ -47,6 +47,7 @@ public class StoryFeedController {
         List<String> friends = friendsListDTO.getFriendsList();
         for(String friend : friends) {
             StoryFeed newFeed;
+            System.out.println(friend);
             Optional<StoryFeed> feed = storyFeedService.findByUserId(friend);
             if(!feed.isPresent()) {
                 newFeed = new StoryFeed();
@@ -64,6 +65,7 @@ public class StoryFeedController {
         System.out.println("inside mq listener receive friends list to delete from the feed");
         List<String> friends = friendsListDTO.getFriendsList();
         for(String friend : friends) {
+            System.out.println(friend);
             StoryFeed newFeed;
             Optional<StoryFeed> feed = storyFeedService.findByUserId(friend);
             if(!feed.isPresent()) {
