@@ -1,5 +1,6 @@
 package com.example.business.controller;
 
+import com.example.business.dtos.BusinessDTO;
 import com.example.business.models.Business;
 import com.example.business.models.Followers;
 import com.example.business.models.Following;
@@ -11,6 +12,7 @@ import com.example.business.services.ModeratorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +98,28 @@ public class BusinessController {
         Optional<Following> following = followingService.findByUserId(userId);
         if (following.isPresent()) {
             return following.get().getFollowing();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @GetMapping(value = "/following/details/{userId}}")
+    public List<BusinessDTO> getBusinessDetails(@PathVariable("userId") String userId) {
+        Optional<Following> following = followingService.findByUserId(userId);
+        List<BusinessDTO> businessDetails = new ArrayList<>();
+        if (following.isPresent()) {
+            List<String> ids = following.get().getFollowing();
+            for(int i = 0; i < ids.size(); i++) {
+                BusinessDTO details = new BusinessDTO();
+                Business business = businessService.findById(ids.get(i)).get();
+                if(business != null) {
+                    details.setBusinessName(business.getName());
+                    details.setImageUrl(business.getImageUrl());
+                    details.setId(business.getId());
+                    businessDetails.add(details);
+                }
+            }
+            return businessDetails;
         } else {
             return new ArrayList<>();
         }

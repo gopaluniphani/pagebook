@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Document(indexName = "userprofile")
 public class UserProfile {
     @Id
-    private String id;
+    private String userId;
     private String imgUrl;
     private String firstName;
     private String lastName;
@@ -16,12 +16,12 @@ public class UserProfile {
     private String bio;
     private String email;
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getImgUrl() {

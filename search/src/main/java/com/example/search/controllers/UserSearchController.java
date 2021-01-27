@@ -23,7 +23,7 @@ public class UserSearchController {
 
     @PutMapping(value = "/{id}")
     public UserProfile updateProfile(@RequestBody UserProfile profile, @PathVariable("id") String id) {
-        profile.setId(id);
+        profile.setUserId(id);
         return userService.save(profile);
     }
 
@@ -38,7 +38,7 @@ public class UserSearchController {
         List<UserDTO> response = new ArrayList<>();
         for(UserProfile profile : profiles) {
             UserDTO dto = new UserDTO();
-            dto.setId(profile.getId());
+            dto.setId(profile.getUserId());
             dto.setImageUrl(profile.getImgUrl());
             dto.setName(profile.getFirstName() + " " + profile.getLastName());
             response.add(dto);
