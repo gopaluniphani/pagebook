@@ -8,9 +8,6 @@ public class RequestorDTO {
 
     private  String requestorId;
 
-
-
-
     public String getRequestorId() {
         return requestorId;
     }
