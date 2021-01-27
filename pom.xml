@@ -15,6 +15,9 @@
     <module>business</module>
     <module>stories</module>
     <module>search</module>
+    <module>posts</module>
+    <module>profile</module>
+    <module>pagebookdto</module>
   </modules>
 
 </project>

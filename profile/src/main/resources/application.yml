@@ -1,0 +1,34 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: pagebook-profile
+  rabbitmq:
+    host: 10.177.1.178
+    username: guest
+    password: guest
+    virtual-host: /
+  datasource:
+    url: jdbc:postgresql://localhost:5432/profile
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://10.177.2.29:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - mappings
+          - env
+          - health
+          - info
