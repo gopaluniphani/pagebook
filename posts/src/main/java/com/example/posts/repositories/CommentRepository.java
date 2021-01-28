@@ -30,7 +30,7 @@ public interface CommentRepository extends CrudRepository<Comment, String> {
     @Transactional
     @Modifying
     @Query("update Comment comment set comment.isApproved=true where comment.commentId=:i")
-    Comment approveComment(@Param("i") String commentId);
+    int approveComment(@Param("i") String commentId);
 
     @Transactional
     @Modifying

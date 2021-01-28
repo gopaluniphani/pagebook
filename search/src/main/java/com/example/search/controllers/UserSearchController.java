@@ -49,4 +49,10 @@ public class UserSearchController {
         }
         return response;
     }
+
+    @PostMapping(value="/internal")
+    public UserProfile saveWithRestTemp(@RequestBody UserProfile profile){
+        System.out.println("saving user");
+        return userService.save(profile);
+    }
 }

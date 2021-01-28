@@ -41,4 +41,7 @@ public interface ActionRepository extends CrudRepository<Action, String> {
 
     @Query("select act.userId from Action act where act.postId=:p and act.actionType=4")
     List<String> getUserOfSadEmoji(@Param("p") String postId);
+
+    @Query(value = "select act.actionType from Action act where act.postId=:p and act.userId=:u")
+    int getPerformedActionByUserForPost(@Param("p") String postId, @Param("u") String userId);
 }

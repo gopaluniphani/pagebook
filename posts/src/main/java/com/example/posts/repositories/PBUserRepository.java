@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface PBUserRepository extends CrudRepository<User, String> {
 
-    @Query("select us.userName from User us where us.userId=:i")
-    String findUserNameByUserId(@Param("i") String userId);
+    @Query(value = "select user_name from pbuser where user_id=?1",nativeQuery = true)
+    String findUserNameByUserId(String userId);
 
-    @Query("select us.userImgURL from User us where us.userId=:i")
-    String findUserImgByUserId(@Param("i") String userId);
+    @Query(value = "select  user_imgurl from pbuser where user_id=?1",nativeQuery = true)
+    String findUserImgByUserId(String userId);
 }
