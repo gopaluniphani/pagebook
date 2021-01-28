@@ -1,5 +1,6 @@
 package com.example.business.controller;
 
+import com.example.business.dtos.AnalyticsDTO;
 import com.example.business.dtos.BusinessDTO;
 import com.example.business.models.Business;
 import com.example.business.models.Followers;
@@ -10,7 +11,9 @@ import com.example.business.services.FollowersService;
 import com.example.business.services.FollowingService;
 import com.example.business.services.ModeratorsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.Path;
 import java.util.ArrayList;
@@ -52,6 +55,7 @@ public class BusinessController {
 
     @GetMapping(value = "/{id}")
     public Business retrieveBusinessDetails(@PathVariable("id") String businessId) {
+
         return businessService.findById(businessId).get();
     }
 
@@ -63,7 +67,10 @@ public class BusinessController {
     @PostMapping(value = "/addmoderator/{businessId}/{moderatorId}")
     public Moderators addModerator(@PathVariable("businessId") String businessId, @PathVariable("moderatorId") String moderatorId) {
         Moderators moderators = moderatorsService.findByBusinessId(businessId).get();
-        moderators.addModerator(moderatorId);
+        if(!moderators.getModerators().contains(moderatorId))
+        {
+            moderators.addModerator(moderatorId);
+        }
         return moderatorsService.save(moderators);
     }
 
@@ -123,5 +130,11 @@ public class BusinessController {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    @Bean
+    RestTemplate getRestTemplate()
+    {
+        return new RestTemplate();
     }
 }
