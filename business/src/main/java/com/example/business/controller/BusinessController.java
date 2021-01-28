@@ -36,6 +36,9 @@ public class BusinessController {
     @Autowired
     FollowingService followingService;
 
+    @Autowired
+    RestTemplate restTemplate;
+
 
     @PostMapping(value = "/moderator/{userId}")
     public Business createBusiness(@RequestBody Business business, @PathVariable("userId") String userId) {
@@ -50,6 +53,10 @@ public class BusinessController {
     @PutMapping(value = "/{id}")
     public Business updateBusiness(@RequestBody Business business, @PathVariable("id") String id) {
         business.setId(id);
+        new Thread(() -> {
+            String url = "http://10.177.1.241:8760/pagebook/api/search/business/" + business.getId();
+            restTemplate.postForObject(url, business, Business.class);
+        }).start();
         return businessService.save(business);
     }
 

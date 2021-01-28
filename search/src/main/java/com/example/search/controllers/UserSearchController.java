@@ -22,7 +22,7 @@ public class UserSearchController {
         return userService.save(profile);
     }
 
-    @PutMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     public UserProfile updateProfile(@RequestBody UserProfile profile, @PathVariable("id") String id) {
         System.out.println("updating user profile");
         profile.setUserId(id);

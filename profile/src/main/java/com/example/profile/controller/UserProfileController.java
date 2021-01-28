@@ -33,6 +33,9 @@ public class UserProfileController {
     @Autowired
     RequestService requestService;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @PostMapping("/save")
     public Profile addUser(@RequestBody Profile profile){
         return profileService.save(profile);
@@ -131,6 +134,10 @@ public class UserProfileController {
     public Profile updateUser(@RequestBody Profile profile, @PathVariable("userId") String userId) {
         profile.setUserId(userId);
         System.out.println("Updating user : "+userId);
+        new Thread(() -> {
+            String url = "http://10.177.1.241:8760/pagebook/api/search/user/" + profile.getUserId();
+            restTemplate.postForObject(url, profile, Profile.class);
+        }).start();
         return profileService.save(profile);
     }
 //    @GetMapping("/findFriendList")

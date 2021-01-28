@@ -25,7 +25,7 @@ public class BusinessSearchController {
         return businessService.save(profile);
     }
 
-    @PutMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     public BusinessProfile updateProfile(@RequestBody BusinessProfile profile, @PathVariable("id") String id) {
         System.out.println("updating profile");
         profile.setId(id);
