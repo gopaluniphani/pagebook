@@ -1,5 +1,6 @@
 package com.example.profile.service.impl;
 
+import com.example.profile.dto.AnalyticsDTO;
 import com.example.profile.entity.Friend;
 import com.example.profile.entity.Profile;
 import com.example.profile.repository.ProfileRepository;
@@ -41,8 +42,20 @@ public class ProfileServiceImpl implements ProfileService {
 
         new Thread(() -> {
             System.out.println("Created new thread " + updateProfileDTO);
-            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+            restTemplate.postForObject("http://10.177.1.241:8760/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
         }).start();
+
+        //todo : analytics
+        /*System.out.println("Calling Analytics");
+        new Thread(() -> {
+            AnalyticsDTO analyticsDTO = new AnalyticsDTO();
+            analyticsDTO.setChannel_id(2);
+            analyticsDTO.setAction("register");
+            analyticsDTO.setUserId( profile.getUserId());
+            analyticsDTO.setCategory( profile.getInterest());
+
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/internal/query", analyticsDTO, Void.class);
+        }).start();*/
 
         return profile1;
     }
@@ -90,6 +103,15 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public Profile getProfileById(String userId)
     {
+        //todo : analytics
+        /*new Thread(() -> {
+            AnalyticsDTO analyticsDTO = new AnalyticsDTO();
+            analyticsDTO.setChannel_id(2);
+            analyticsDTO.setUserId( userId);
+            analyticsDTO.setAction("view profile");
+
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+        }).start();*/
         return profileRepository.getProfileById(userId);
     }
 

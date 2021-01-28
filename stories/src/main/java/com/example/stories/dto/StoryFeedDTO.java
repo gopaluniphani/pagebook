@@ -15,4 +15,12 @@ public class StoryFeedDTO {
     public void addToStories(Story story) {
         this.stories.add(story);
     }
+
+    public List<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(List<Story> stories) {
+        this.stories = stories;
+    }
 }

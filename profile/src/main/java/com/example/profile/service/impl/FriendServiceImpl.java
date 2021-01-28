@@ -1,11 +1,13 @@
 package com.example.profile.service.impl;
 
+import com.example.profile.dto.AnalyticsDTO;
 import com.example.profile.entity.Friend;
 import com.example.profile.repository.FriendRepository;
 import com.example.profile.repository.ProfileRepository;
 import com.example.profile.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,20 @@ public class FriendServiceImpl implements FriendService {
     FriendRepository friendRepository;
     @Autowired
     ProfileRepository profileRepository;
+    @Autowired
+    RestTemplate restTemplate;
 
     @Override
     public Friend save(Friend friend){
+        //todo : analytics
+        /*new Thread(() -> {
+            AnalyticsDTO analyticsDTO = new AnalyticsDTO();
+            analyticsDTO.setChannel_id(2);
+            analyticsDTO.setUserId( friend.getUserId());
+            analyticsDTO.setAction("follow");
+
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+        }).start();*/
         return friendRepository.save(friend);
     }
 

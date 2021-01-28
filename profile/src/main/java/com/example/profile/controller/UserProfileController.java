@@ -57,6 +57,7 @@ public class UserProfileController {
         friends.add(friendService.save(friend));
         profileService.addTotalFriend(friend.getUserId());
         profileService.addTotalFriend(friend.getFriendId());
+
         return friends;
 
     }
@@ -87,40 +88,49 @@ public class UserProfileController {
     @GetMapping("/userProfile/{email}")
     public Profile getProfileByEmail(@PathVariable("email") String email)
     {
+        System.out.println("getting profile of : "+email);
         return profileService.getProfileByEmail(email);
     }
 
     @GetMapping("/userProfileById/{userId}")
     public Profile getProfileById(@PathVariable("userId") String userId)
     {
+        System.out.println("getting profile by Id : "+userId);
         return profileService.getProfileById(userId);
     }
+
     @GetMapping("/interest/{userId}")
     public String getInterestById(@PathVariable("userId") String userId)
     {
+        System.out.println("Getting interest of : "+userId);
         return profileService.getInterestById(userId);
     }
+
     @GetMapping("/friendName/{userId}")
     public String findUserNameById(@PathVariable("userId") String userId)
     {
+        System.out.println("getting friends of userId : "+ userId);
         return profileService.findUserNameById(userId);
     }
 
     @GetMapping("/findAll")
     public List<Profile> findAllProduct()
     {
+        System.out.println("Getting All.");
         return profileService.findAll();
     }
 
     @PutMapping("/updateImg")
     public void updateImg(@RequestParam("userId")String userId, @RequestParam("imgUrl") String imgUrl)
     {
+        System.out.println("Updating Profile img : "+userId);
         profileService.updateImg(userId, imgUrl);
     }
 
     @PutMapping("/updateUser/{userId}")
     public Profile updateUser(@RequestBody Profile profile, @PathVariable("userId") String userId) {
         profile.setUserId(userId);
+        System.out.println("Updating user : "+userId);
         return profileService.save(profile);
     }
 //    @GetMapping("/findFriendList")
@@ -138,11 +148,13 @@ public class UserProfileController {
     @GetMapping("/findRequestorList/{userId}")
     public List<String> findRequestorNameById(@PathVariable("userId") String userId)
     {
+        System.out.println("getting requestors of : "+ userId);
         return requestService.findRequestorNameById(userId);
     }
 
     @DeleteMapping("deleteRequest")
     public void deleteRequestById(@RequestParam("requestorId")String requestorId, @RequestParam("userId") String userId){
+        System.out.println("Deleting request of : "+requestorId+" "+userId);
         requestService.deleteRequestById(requestorId,userId);
     }
 
