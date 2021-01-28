@@ -18,22 +18,26 @@ public class UserSearchController {
 
     @PostMapping(value="/")
     public UserProfile save(@RequestBody UserProfile profile){
+        System.out.println("saving user");
         return userService.save(profile);
     }
 
     @PutMapping(value = "/{id}")
     public UserProfile updateProfile(@RequestBody UserProfile profile, @PathVariable("id") String id) {
+        System.out.println("updating user profile");
         profile.setUserId(id);
         return userService.save(profile);
     }
 
     @GetMapping(value="/findall")
     List<UserProfile> findAll(){
+        System.out.println("finding user profiles");
         return userService.findAll();
     }
 
     @GetMapping(value="/{searchTerm}")
     public List<UserDTO> search(@PathVariable("searchTerm") String search){
+        System.out.println("searching user profile by term");
         List<UserProfile> profiles = userService.processSearch(search);
         List<UserDTO> response = new ArrayList<>();
         for(UserProfile profile : profiles) {

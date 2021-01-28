@@ -4,6 +4,7 @@ public class BusinessDTO {
     private String id;
     private String name;
     private String imageUrl;
+    private boolean flag;
 
     public String getId() {
         return id;
@@ -27,5 +28,13 @@ public class BusinessDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 }

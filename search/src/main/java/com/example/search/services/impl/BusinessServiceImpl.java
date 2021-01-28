@@ -56,6 +56,7 @@ public class BusinessServiceImpl implements BusinessService {
         QueryBuilder queryBuilder=
                 QueryBuilders
                         .multiMatchQuery("*" + query + "*","name", "description")
+                        .lenient(true)
                         .fuzziness(Fuzziness.AUTO);
 
         Query searchQuery=new NativeSearchQueryBuilder()

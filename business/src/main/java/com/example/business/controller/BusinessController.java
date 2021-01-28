@@ -60,6 +60,11 @@ public class BusinessController {
         return followersService.findByBusinessId(businessId).get();
     }
 
+    @GetMapping(value = "/moderators/{businessId}")
+    public Moderators getModeratorsOfBusiness(@PathVariable("businessId") String businessId) {
+        return moderatorsService.findByBusinessId(businessId).get();
+    }
+
     @PostMapping(value = "/addmoderator/{businessId}/{moderatorId}")
     public Moderators addModerator(@PathVariable("businessId") String businessId, @PathVariable("moderatorId") String moderatorId) {
         Moderators moderators = moderatorsService.findByBusinessId(businessId).get();
@@ -103,12 +108,14 @@ public class BusinessController {
         }
     }
 
-    @GetMapping(value = "/following/details/{userId}}")
+    @GetMapping(value = "/following/details/{userId}")
     public List<BusinessDTO> getBusinessDetails(@PathVariable("userId") String userId) {
+        System.out.println("retrieving following details");
         Optional<Following> following = followingService.findByUserId(userId);
         List<BusinessDTO> businessDetails = new ArrayList<>();
         if (following.isPresent()) {
             List<String> ids = following.get().getFollowing();
+            System.out.println(ids);
             for(int i = 0; i < ids.size(); i++) {
                 BusinessDTO details = new BusinessDTO();
                 Business business = businessService.findById(ids.get(i)).get();

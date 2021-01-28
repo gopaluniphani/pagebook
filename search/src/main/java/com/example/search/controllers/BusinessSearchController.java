@@ -21,22 +21,26 @@ public class BusinessSearchController {
 
     @PostMapping(value="/")
     public BusinessProfile save(@RequestBody BusinessProfile profile){
+        System.out.println("saving business Profile");
         return businessService.save(profile);
     }
 
     @PutMapping(value = "/{id}")
     public BusinessProfile updateProfile(@RequestBody BusinessProfile profile, @PathVariable("id") String id) {
+        System.out.println("updating profile");
         profile.setId(id);
         return businessService.save(profile);
     }
 
     @GetMapping(value="/findall")
     List<BusinessProfile> findAll(){
+        System.out.println("finding all business");
         return businessService.findAll();
     }
 
     @GetMapping(value="/{searchTerm}")
     public List<BusinessDTO> search(@PathVariable("searchTerm") String search){
+        System.out.println("searching by term");
         List<BusinessProfile> profiles = businessService.processSearch(search);
         List<BusinessDTO> response = new ArrayList<>();
         for(BusinessProfile profile : profiles) {
