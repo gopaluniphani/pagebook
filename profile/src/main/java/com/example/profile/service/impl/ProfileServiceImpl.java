@@ -42,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         new Thread(() -> {
             System.out.println("Created new thread " + updateProfileDTO);
-            restTemplate.postForObject("http://10.177.1.241:8760/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
         }).start();
 
         //todo : analytics
@@ -68,7 +68,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public int findTotalFriendById(String userId)
     {
-        return profileRepository.findTotalFriendById(userId);
+        return Integer.parseInt(profileRepository.findTotalFriendById(userId));
     }
 
     @Override

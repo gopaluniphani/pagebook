@@ -18,7 +18,7 @@ public interface ProfileRepository extends CrudRepository<Profile,String> {
 
     @Transactional(readOnly = true)
     @Query(value = "select total_friends from profile where user_id=?1", nativeQuery = true)
-    int findTotalFriendById(String userId);
+    String findTotalFriendById(String userId);
 
     @Transactional(readOnly = true)
     @Query(value = "select img_url from profile where user_id=?1", nativeQuery = true)

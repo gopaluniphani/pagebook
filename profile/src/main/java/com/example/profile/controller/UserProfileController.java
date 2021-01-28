@@ -61,6 +61,11 @@ public class UserProfileController {
         profileService.addTotalFriend(friend.getUserId());
         profileService.addTotalFriend(friend.getFriendId());
 
+        Request request=new Request();
+        request.setUserId(friend.getUserId());
+        request.setRequestorId(friend.getFriendId());
+        requestService.deleteRequestById(request.getRequestorId(),request.getUserId());
+
         return friends;
 
     }
