@@ -42,7 +42,8 @@ public class ProfileServiceImpl implements ProfileService {
 
         new Thread(() -> {
             System.out.println("Created new thread " + updateProfileDTO);
-            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+            //todo : register URL in whitelist and put /internal after /post in URL
+            restTemplate.postForObject("http://10.177.2.29:8760/pagebook/api/post/internal/addUser",updateProfileDTO, boolean.class);
         }).start();
 
         //todo : analytics
@@ -135,12 +136,9 @@ public class ProfileServiceImpl implements ProfileService {
                 .build();
 
         new Thread(() -> {
-            restTemplate.postForObject("http://10.177.1.117:8082/pagebook/api/post/addUser",updateProfileDTO, boolean.class);
+            //todo : register URL in whitelist and put /internal after /post in URL
+            restTemplate.postForObject("http://10.177.2.29:8760/pagebook/api/post/internal/addUser",updateProfileDTO, boolean.class);
         }).start();
     }
-
-
-
-
 
 }

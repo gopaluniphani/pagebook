@@ -2,6 +2,7 @@ package com.example.posts.services.impl;
 
 import com.example.posts.Constant;
 import com.example.posts.entity.Comment;
+import com.example.posts.model.AnalyticsDTO;
 import com.example.posts.model.CommentsDTO;
 import com.example.posts.repositories.CommentRepository;
 import com.example.posts.repositories.PBUserRepository;
@@ -9,6 +10,7 @@ import com.example.posts.repositories.PostRepository;
 import com.example.posts.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ public class CommentServiceImpl implements CommentService {
     PostRepository postRepository;
     @Autowired
     PBUserRepository pbUserRepository;
+    @Autowired
+    RestTemplate restTemplate;
 
     @Override
     public int totalCommentsByPostId(String postId) {
@@ -42,6 +46,16 @@ public class CommentServiceImpl implements CommentService {
         if(profileType.equals( Constant.PROFILE_TYPE_PUBLIC) || profileType.equals( Constant.PROFILE_TYPE_PRIVATE))
         {
             comment.setApproved(true);
+            //todo : analytics
+            /*new Thread(() -> {
+                AnalyticsDTO analyticsDTO = AnalyticsDTO.builder()
+                        .channel_id(2)
+                        .action("comment")
+                        .typeId(comment.getPostId())
+                        .userId(comment.getUserId())
+                        .build();
+                restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+            }).start();*/
         }
         return commentRepository.save(comment);
     }
@@ -52,6 +66,7 @@ public class CommentServiceImpl implements CommentService {
         List<CommentsDTO> commentsDTOList = new ArrayList<>();
         for(Comment comment : commentList)
         {
+            System.out.println(pbUserRepository.findUserNameByUserId(comment.getUserId()));
             CommentsDTO commentsDTO = CommentsDTO.builder()
                     .comment( comment)
                     .userName( pbUserRepository.findUserNameByUserId(comment.getUserId()))
@@ -62,7 +77,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment approveComment(String commentId) {
+    public int approveComment(String commentId) {
+        //todo : analytics
+        /*new Thread(() -> {
+           Comment comment = commentRepository.findById(commentId).get();
+           AnalyticsDTO analyticsDTO = AnalyticsDTO.builder()
+                   .channel_id(2)
+                   .action("comment")
+                   .typeId(comment.getPostId())
+                   .userId(comment.getUserId())
+                   .build();
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+        }).start();*/
         return commentRepository.approveComment(commentId);
     }
 

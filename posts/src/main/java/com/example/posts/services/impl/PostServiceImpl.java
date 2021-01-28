@@ -3,9 +3,7 @@ package com.example.posts.services.impl;
 import com.example.posts.Constant;
 import com.example.posts.entity.Post;
 import com.example.posts.entity.PostsFeed;
-import com.example.posts.model.FriendsResponse;
-import com.example.posts.model.PostDTO;
-import com.example.posts.model.Response;
+import com.example.posts.model.*;
 import com.example.posts.repositories.PostRepository;
 import com.example.posts.repositories.PostsFeedRepository;
 import com.example.posts.services.ActionService;
@@ -17,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,44 +36,53 @@ public class PostServiceImpl implements PostService {
     PostsFeedRepository postsFeedRepository;
 
     @Override
-    public Response addPost(Post post) {
-        Response response;
+    public Post addPost(Post post) {
+        //Response response;
         try {
             if(post.getProfileType().equals( Constant.PROFILE_TYPE_PRIVATE) ||
-                post.getProfileType().equals( Constant.PROFILE_TYPE_PUBLIC) )
+                    post.getProfileType().equals( Constant.PROFILE_TYPE_PUBLIC) )
             {
                 post.setApproved(true);
-                new Thread(() -> {
-                    List<String> friendsList = getFriendsList(post.getUserId());
-                    System.out.println(friendsList);
-                    PostsFeed postsFeed = PostsFeed.builder()
-                            .postId(post.getPostId())
-                            .build();
-                    for(String friendId : friendsList)
-                    {
-                        postsFeed.setUserId(friendId);
-                        postsFeedRepository.save(postsFeed);
-                    }
-                }).start();
             }
             System.out.println(post);
             Post addedPost = postRepository.save(post);
-            response = Response.builder()
-                    .status(true)
-                    .body(addedPost)
-                    .build();
+            new Thread(() -> {
+                List<String> friendsList = getFriendsList(addedPost.getUserId());
+                System.out.println(friendsList);
+
+                for(String friendId : friendsList)
+                {
+                    PostsFeed postsFeed = PostsFeed.builder()
+                            .postId(addedPost.getPostId())
+                            .build();
+                    postsFeed.setUserId(friendId);
+                    System.out.println("added friend in User : "+ friendId);
+                    postsFeedRepository.save(postsFeed);
+                }
+            }).start();
+            //todo : for analytics
+            /*new Thread(() -> {
+                AnalyticsDTO analyticsDTO = AnalyticsDTO.builder()
+                        .channel_id( 2)
+                        .userId(post.getUserId())
+                        .category( post.getPostCategory())
+                        .type( post.getFileType())
+                        .typeId( post.getPostId())
+                        .action( "posting")
+                        .time(LocalDateTime.now())
+                        .build();
+                restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+            }).start();*/
+            return addedPost;
         }
         catch (Exception e)
         {
-            response = Response.builder()
-                    .errorMessage(e.toString())
-                    .build();
+            return null;
         }
-        return response;
     }
 
     @Override
-    public Response findPostByUserId(String userId) {
+    public List<PostDTO> findPostByUserId(String userId) {
         Response response;
         List<Post> postList = postRepository.findPostByUserId(userId);
         List<PostDTO> postDTOS = new ArrayList<>();
@@ -94,13 +102,15 @@ public class PostServiceImpl implements PostService {
                     .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
                     .performedAction( actionService.performedActionByUserForPost(postId, userId))
                     .build();
+            System.out.println(pbUserService.findUserNameByUserId("UserName: "+userId));
             postDTOS.add(postDTO);
         }
-        response = Response.builder()
+        /*response = Response.builder()
                 .status(true)
                 .body(postDTOS)
                 .build();
-        return  response;
+        return  response;*/
+        return postDTOS;
     }
 
     @Override
@@ -114,13 +124,55 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getUnapprovedPost(String businessId) {
-        return postRepository.getUnApprovedPost(businessId);
+    public List<PostDTO> getUnapprovedPost(String businessId) {
+        List<Post> postList = postRepository.getUnApprovedPost(businessId);
+        List<PostDTO> postDTOS = new ArrayList<>();
+        System.out.println(postList);
+        for(Post post : postList)
+        {
+            String postId = post.getPostId();
+            String userId = post.getUserId();
+            //System.out.println("postId : "+postId+" "+"userId : "+userId);
+            PostDTO postDTO = PostDTO.builder()
+                    .post( post)
+                    .userImgURL( pbUserService.findUserImgByUserId(userId))
+                    .userName( pbUserService.findUserNameByUserId(userId))
+                    .totalComments( commentService.totalCommentsByPostId( postId))
+                    .totalLikes( actionService.totalLikesByPostId(postId))
+                    .totalDislikes( actionService.totalDislikesByPostId(postId))
+                    .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
+                    .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
+                    .performedAction( actionService.performedActionByUserForPost(postId, userId))
+                    .build();
+            postDTOS.add(postDTO);
+        }
+        return postDTOS;
     }
 
     @Override
-    public List<Post> getBusinessPost(String businessId) {
-        return postRepository.getBusinessPost(businessId);
+    public List<PostDTO> getBusinessPost(String businessId) {
+        List<Post> postList = postRepository.getBusinessPost(businessId);
+        List<PostDTO> postDTOS = new ArrayList<>();
+        System.out.println(postList);
+        for(Post post : postList)
+        {
+            String postId = post.getPostId();
+            String userId = post.getUserId();
+            //System.out.println("postId : "+postId+" "+"userId : "+userId);
+            PostDTO postDTO = PostDTO.builder()
+                    .post( post)
+                    .userImgURL( pbUserService.findUserImgByUserId(userId))
+                    .userName( pbUserService.findUserNameByUserId(userId))
+                    .totalComments( commentService.totalCommentsByPostId( postId))
+                    .totalLikes( actionService.totalLikesByPostId(postId))
+                    .totalDislikes( actionService.totalDislikesByPostId(postId))
+                    .totalWowEmoji( actionService.totalWowEmojiByPostId(postId))
+                    .totalSadEmoji( actionService.totalSadEmojiByPostId(postId))
+                    .performedAction( actionService.performedActionByUserForPost(postId, userId))
+                    .build();
+            postDTOS.add(postDTO);
+        }
+        return postDTOS;
     }
 
     @Override
@@ -129,8 +181,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post approvePost(String postId) {
-        Post post = postRepository.approvePost(postId);
+    public int approvePost(String postId) {
+        postRepository.approvePost(postId);
+        Post post = postRepository.findById(postId).get();
         String businessId = postRepository.getBusinessIdByPostId(postId);
         //todo: fetch followers here
         new Thread(() -> {
@@ -145,16 +198,30 @@ public class PostServiceImpl implements PostService {
                 postsFeedRepository.save(postsFeed);
             }
         }).start();
-        return post;
+        //todo : for analytics
+        /*new Thread(() -> {
+            AnalyticsDTO analyticsDTO = AnalyticsDTO.builder()
+                    .channel_id(2)
+                    .userId(post.getUserId())
+                    .category( post.getPostCategory())
+                    .type( post.getFileType())
+                    .typeId( post.getPostId())
+                    .action( "posting")
+                    .time(LocalDateTime.now())
+                    .build();
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+        }).start();*/
+        return 1;
     }
 
     @Override
     public List<String> getFriendsList(String userId) {
         System.out.println("got UserId in get friends list : "+ userId);
-        FriendsResponse ids = restTemplate.getForObject("http://10.177.2.27:9002/pagebook/api/profile/getFriendsId" +
-                "/"+userId, FriendsResponse.class);
+        //todo :
+        List<String> ids = restTemplate.getForObject("http://10.177.2.29:8760/pagebook/api/profile/internal/getFriendsId" +
+                "/"+userId, List.class);
         System.out.println(ids);
-        return (List<String>) ids.getBody();
+        return ids;
     }
 
     @Override
@@ -162,11 +229,12 @@ public class PostServiceImpl implements PostService {
         postRepository.unApprovePost(postId);
     }
 
-    //todo :
     List<String> getFollowersList(String businessId)
     {
-        FriendsResponse ids = restTemplate.getForObject("http://10.177.1.178:8771/pagebook/api/business" +
-                "/followers/"+businessId,FriendsResponse.class);
-        return (List<String>) ids.getBody();
+        // TODO: register API in whitelist and make copy with /internal
+        FollowersResponse followersResponse = restTemplate.getForObject("http://10.177.2.29:8760/pagebook/api/business/internal" +
+                "/followers/"+businessId,FollowersResponse.class);
+        System.out.println(followersResponse.getFollowers());
+        return followersResponse.getFollowers();
     }
 }

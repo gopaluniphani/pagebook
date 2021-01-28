@@ -3,13 +3,14 @@ server:
 
 spring:
   application:
-      name: pagebook-posts
+    name: pagebook-posts
 
 eureka:
   client:
     registerWithEureka: true
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+      defaultZone: ${EUREKA_SERVER:http://10.177.2.29:8761/eureka}
+#      defaultZone: ${EUREKA_SERVER:http://10.177.1.241:8761/eureka}
 management:
   endpoints:
     web:

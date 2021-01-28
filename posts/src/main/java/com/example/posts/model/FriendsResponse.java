@@ -39,4 +39,13 @@ public class FriendsResponse implements Serializable {
     public void setBody(Object body) {
         this.body = body;
     }
+
+    @Override
+    public String toString() {
+        return "FriendsResponse{" +
+                "status=" + status +
+                ", error='" + error + '\'' +
+                ", body=" + body +
+                '}';
+    }
 }

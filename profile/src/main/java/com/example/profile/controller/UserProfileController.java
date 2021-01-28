@@ -8,6 +8,7 @@ import com.example.profile.entity.Request;
 import com.example.profile.service.FriendService;
 import com.example.profile.service.ProfileService;
 import com.example.profile.service.RequestService;
+import dto.UpdateProfileDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ public class UserProfileController {
     {
         return profileService.getProfileTypeById(userId);
     }
+
     //to find profile using using email
     @GetMapping("/userProfile/{email}")
     public Profile getProfileByEmail(@PathVariable("email") String email)
@@ -139,9 +141,21 @@ public class UserProfileController {
     public Profile updateUser(@RequestBody Profile profile, @PathVariable("userId") String userId) {
         profile.setUserId(userId);
         System.out.println("Updating user : "+userId);
+
+        UpdateProfileDTO updateProfileDTO = UpdateProfileDTO.builder()
+                .userImgURL( profile.getImgUrl())
+                .userName( profile.getFirstName())
+                .userId( profile.getUserId())
+                .build();
         new Thread(() -> {
-            String url = "http://10.177.1.241:8760/pagebook/api/search/user/" + profile.getUserId();
+            //todo : register it in whitelist and put /internal after /search
+            String url = "http://10.177.2.29:8760/pagebook/api/search/user/internal/" + profile.getUserId();
             restTemplate.postForObject(url, profile, Profile.class);
+        }).start();
+
+        new Thread(() -> {
+           restTemplate.postForObject("http://10.177.2.29:8760/pagebook/api/post/internal/addUser/"
+                   , updateProfileDTO, boolean.class);
         }).start();
         return profileService.save(profile);
     }

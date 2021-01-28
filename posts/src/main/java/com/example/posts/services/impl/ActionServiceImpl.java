@@ -1,11 +1,13 @@
 package com.example.posts.services.impl;
 
 import com.example.posts.entity.Action;
+import com.example.posts.model.AnalyticsDTO;
 import com.example.posts.repositories.ActionRepository;
 import com.example.posts.repositories.PBUserRepository;
 import com.example.posts.services.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public class ActionServiceImpl implements ActionService {
     ActionRepository actionRepository;
     @Autowired
     PBUserRepository pbUserRepository;
+    @Autowired
+    RestTemplate restTemplate;
 
     @Override
     public int totalLikesByPostId(String postId) {
@@ -53,6 +57,37 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public Action save(Action action) {
+        //todo : analytics
+        /*new Thread(() -> {
+            int performedAction = 0;
+            if(action.getActionType() == 3 || action.getActionType() == 1)
+            {
+                performedAction = 1;
+            }
+            else if(action.getActionType() == 4 || action.getActionType() == 2)
+            {
+                performedAction = 2;
+            }
+            AnalyticsDTO analyticsDTO;
+            if ( performedAction == 1)
+            {
+                analyticsDTO = AnalyticsDTO.builder()
+                        .channel_id( 2)
+                        .userId( action.getUserId())
+                        .typeId( action.getPostId())
+                        .action("like")
+                        .build();
+            }
+            else {
+                analyticsDTO = AnalyticsDTO.builder()
+                        .channel_id( 2)
+                        .userId( action.getUserId())
+                        .typeId( action.getPostId())
+                        .action("dislike")
+                        .build();
+            }
+            restTemplate.postForObject("http://10.177.2.29:8760/analytics/query", analyticsDTO, Void.class);
+        }).start();*/
         return actionRepository.save(action);
     }
 
@@ -98,5 +133,10 @@ public class ActionServiceImpl implements ActionService {
             userNameList.add( pbUserRepository.findUserNameByUserId(userId));
         }
         return userNameList;
+    }
+
+    @Override
+    public int getPerformedActionByUser(String postId, String userId) {
+        return actionRepository.getPerformedActionByUserForPost(postId,userId);
     }
 }

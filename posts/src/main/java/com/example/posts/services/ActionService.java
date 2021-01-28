@@ -27,4 +27,6 @@ public interface ActionService {
     List<String> getUserOfWowEmoji(String postId);
 
     List<String> getUserOfSadEmoji(String postId);
+
+    int getPerformedActionByUser(String postId, String userId);
 }

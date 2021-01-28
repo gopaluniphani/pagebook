@@ -15,7 +15,7 @@ public interface CommentService {
 
     List<CommentsDTO> getComments(String parentCommentId, String postId);
 
-    Comment approveComment(String commentId);
+    int approveComment(String commentId);
 
     void unApproveComment(String commentId);
 }
